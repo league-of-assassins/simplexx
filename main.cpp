@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
-#include <bits/stdc++.h>
+#include <iomanip>
+#include <cmath>
 #include <ctype.h>
 #include <cstdlib>
 #include <Windows.h>
