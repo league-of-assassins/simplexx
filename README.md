@@ -1,5 +1,5 @@
 # simplexx
- calculate the inputted simplex
+ calculate the inputted equations using simplex method. Supports Rmin method
  
  example inputs:
 
