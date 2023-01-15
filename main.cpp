@@ -45,7 +45,7 @@ void topfunc(char linee, string hor[], int valh[], int &max){
 
 
 void bottom( float dizi[][25], int valv[], int valh[], string ver[], string hor[],
- bool &score, char linee, int &max, bool &zway, float zj[],float cz[],int vermax, bool &oldZway, int &rcounter, bool &rway, bool &rem){
+ bool &score, char linee, int &max, bool &zway, float zj[],float cz[],int vermax, bool &oldZway, int &rcounter, bool &rmin, bool &rem){
 	int i, keyh=0, keyv=0, a, b, antikeyv, j, temp=0, tempo, u, lcount=0;
 	float maxi=0, multiply, key=0;
 	cout << "\n" << string (13*max,linee);
@@ -99,7 +99,7 @@ void bottom( float dizi[][25], int valv[], int valh[], string ver[], string hor[
 									//checks if loop has ended
 
 	if (maxi==0){ 
-		score=true; if(rway==true){rway=false; score=false; rem=true; if(oldZway==true){zway=true;}}
+		score=true; if(rmin==true){rmin=false; score=false; rem=true; if(oldZway==true){zway=true;}}
 		goto end;
 	}
 	maxi=0;
@@ -191,8 +191,8 @@ int main (){
 	string convert="", stemp, tempS;
 	char linee = '-';
 
-	bool zway=false, rway=false, oldZway=false, rem=false, score=false;
-	// zway= if zmax or zmin | rway= if rway or normal way | oldZway= if zway was max before turning min because of rway |
+	bool zway=false, rmin=false, oldZway=false, rem=false, score=false;
+	// zway= if zmax or zmin | rmin= if rmin or normal method | oldZway= if zway was max before turning min because of rmin |
 	// rem= if should start remover function | score= if loop has ended
 
 	cout << "\n Enter the equations. Example: \n Zmin=6x1+1x2 6x1+2x2=5 8x1+6x2>12 2x1+4x2<8 or Zmax=6x1+8x2 30x1+20x2<300 5x1+10x2<110 Press enter to stop \n\n";
@@ -245,11 +245,11 @@ int main (){
 				break;
 
 			case '>':
-				tempS=to_string(rcount); rcount++; temphor[hori]="R"+tempS; rway=true; rmarker[hori]=1; rcounter++; hori++; temphor[hori]="V"+tempS; dizit[hori]=-1;
+				tempS=to_string(rcount); rcount++; temphor[hori]="R"+tempS; rmin=true; rmarker[hori]=1; rcounter++; hori++; temphor[hori]="V"+tempS; dizit[hori]=-1;
 				break;
 
 			case '=':
-				tempS=to_string(rcount); rcount++; temphor[hori]="R"+tempS; rway=true; rmarker[hori]=1; rcounter++;
+				tempS=to_string(rcount); rcount++; temphor[hori]="R"+tempS; rmin=true; rmarker[hori]=1; rcounter++;
 			break;
 			}	
 											// record the place of val which comes after ><= to find it later
@@ -278,7 +278,7 @@ int main (){
 	}
 											// check if zmax or zmin
 	if (strstr(input,"a")||strstr(input,"A")){
-		zway=true; oldZway=true; if(rway==true){zway=false;}
+		zway=true; oldZway=true; if(rmin==true){zway=false;}
 	}
 	else if (strstr(input,"i")||strstr(input,"I")||strstr(input,"İ")){
 		zway=false;
@@ -302,20 +302,20 @@ int main (){
 		ver[i]=hor[i+xmax+y];
 		valv[i]=0;
 	}
-											//set tempvalh in case rway
-	if(rway==true){
+											//set tempvalh in case rmin
+	if(rmin==true){
 		for(i=0;i<=xmax+hori;i++){
 			tempvalh[i]=valh[i];
 		}
 	}
 											//set rest of valh 0
 	y=0;
-	if(rway==true){y=vermax+1;}
+	if(rmin==true){y=vermax+1;}
 	for(i=vermax+1-y;i<=xmax;i++){
 		valh[i]=0;
 	}
-											//set valh and valv of rway
-	if(rway==true){
+											//set valh and valv of rmin
+	if(rmin==true){
 		y=0;
 		for(i=0;i<=max;i++){
 			if(dizit[i]==-1){y++;}
@@ -344,7 +344,7 @@ int main (){
 		for(i=0;i<=vermax;i++){
 			midprint( dizi, valv[i], ver[i], i, max);
 		}
-		bottom(dizi, valv, valh, ver, hor, score, linee, max, zway, zj, cz, vermax, oldZway, rcounter, rway, rem);
+		bottom(dizi, valv, valh, ver, hor, score, linee, max, zway, zj, cz, vermax, oldZway, rcounter, rmin, rem);
 		if(rem==true){ remover(dizi, hor, ver, valh, valv, max, vermax, rcounter, rem, zj, cz, rmark, tempvalh, xmax);}
 		Sleep(3000);
 	}
