@@ -194,11 +194,11 @@ int main (){
 	// zway= if zmax or zmin | rway= if rway or normal way | oldZway= if zway was max before turning min because of rway |
 	// rem= if should start remover function | score= if loop has ended
 
-	cout << "\n Enter the equations. Example: \n Zmin=6x1+1x2 6x1+2x2=5 8x1+6x2>12 2x1+4x2<8 or Zmax=6x1+8x2 30x1+20x2<300 5x1+10x2<110 Type e to stop \n\n";
+	cout << "\n Enter the equations. Example: \n Zmin=6x1+1x2 6x1+2x2=5 8x1+6x2>12 2x1+4x2<8 or Zmax=6x1+8x2 30x1+20x2<300 5x1+10x2<110 Press enter to stop \n\n";
 
 											// input the characters
 
-	while(input[i-1]!='e'){
+	while(input[i-1]!='\n'){
 		cin >> noskipws>> input[i];
 		if(input[i-1]=='x'&&isdigit(input[i])){
 											// find numbers before x
