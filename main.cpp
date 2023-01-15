@@ -112,7 +112,7 @@ void bottom( float dizi[][25], int valv[], int valh[], string ver[], string hor[
 		if(tempo>temp){keyv=i;tempo=temp;}
 	}
 
-	skip:							// calculates keyv line
+	skip:								// calculates keyv line
 
 	key=dizi[keyv][keyh];
 	for(i=0;i<=max;i++){
@@ -174,15 +174,15 @@ int main (){
 	char input[250]={};			//inputted characters
 	string hor[25]={};			//Horizontal line S1 R -V etc.
 	string ver[25]={};			//Vertical line of hor
-	string temphor[25]={};		//temporary hor till i find x length
+	string temphor[25]={};			//temporary hor till i find x length
 	int valh[25]={};			//horizontal values of hor
 	int valv[25]={};			//vertical values of ver
 	int dizit[25]={};			//temporary values of > < =
 	int ci[10]={};				//values after > < =
-	int tempvalh[25]={};		//store original values of valh for use later
+	int tempvalh[25]={};			//store original values of valh for use later
 	int rmarker[25]={};			//mark r columns
 	int rmark[25]={};			//extend rmarker array to fit max
-	float dizi[10][25]={};		//midline array values
+	float dizi[10][25]={};			//midline array values
 	float zj[25]={};			//Zj line
 	float cz[25]={};			//Cj-Zj line	
 
