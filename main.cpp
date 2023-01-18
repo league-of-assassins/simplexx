@@ -21,8 +21,8 @@ void top(string hor[25], int valh[25], int& max, char spacee) {
 	cout << "|  \n";
 }
 
-void printer(float array[][25], int valv[25], int valh[25], string ver, int x, int max,
-	int func, int vermax, float array2[][25], float& maxi, int& keyh, bool zway) {
+void printer(double array[][25], int valv[25], int valh[25], string ver, int x, int max,
+	int func, int vermax, double array2[][25], double& maxi, int& keyh, bool zway) {
 	int i, p = 2, leftspace, rightspace, j;
 	char spacee = ' ', linee = '-';
 	// output values
@@ -46,7 +46,7 @@ void printer(float array[][25], int valv[25], int valh[25], string ver, int x, i
 		if (array[x][i] >= 0) { leftspace++; }
 		if (array[x][i]<10 && array[x][i]>-10) { leftspace++; }
 		if (ceilf(array[x][i]) == array[x][i]) {
-			p = 0; rightspace += 3;
+			p = 0; rightspace += 3;cout;
 		}
 		cout << string(leftspace, spacee) << fixed << setprecision(p) << array[x][i] << string(rightspace, spacee);
 
@@ -68,10 +68,10 @@ void printer(float array[][25], int valv[25], int valh[25], string ver, int x, i
 	if (func == 1 && vermax == x) { cout << "\n" << string(7 + 10 * (max + 1), linee); }
 }
 
-void bottom(float dizi[10][25], int valv[25], int valh[25], string ver[25], string hor[25],
-	bool& score, int& max, bool& zway, float zj[1][25], float cz[1][25], int vermax, bool& oldZway, int& rcounter, bool& rmin, bool& rem) {
+void bottom(double dizi[10][25], int valv[25], int valh[25], string ver[25], string hor[25],
+	bool& score, int& max, bool& zway, double zj[1][25], double cz[1][25], int vermax, bool& oldZway, int& rcounter, bool& rmin, bool& rem) {
 	int i, keyh = 0, keyv = 0, j, lcount = 0;
-	float maxi = 0, multiply, key = 0, temp = 0, tempo = 0;
+	double maxi = 0, multiply, key = 0, temp = 0, tempo = 0;
 	// output Zj
 	cout << "\n  Zj|  ";
 	printer(zj, valv, valh, ver[0], 0, max, 2, vermax, dizi, maxi, keyh, zway);
@@ -111,8 +111,8 @@ skip:								// calculates keyv line
 end:cout << "\n\n\n";
 }
 
-void remover(float dizi[10][25], string hor[25], string ver[25], int valh[25], int valv[25],
-	int& max, int vermax, int rcounter, bool& rem, float zj[1][25], float cz[1][25], int rmark[25], int tempvalh[25], int xmax) {
+void remover(double dizi[10][25], string hor[25], string ver[25], int valh[25], int valv[25],
+	int& max, int vermax, int rcounter, bool& rem, double zj[1][25], double cz[1][25], int rmark[25], int tempvalh[25], int xmax) {
 	int i, j, u, y = 0;
 	bool start = false;
 	rem = false;
@@ -153,13 +153,13 @@ int main() {
 	int tempvalh[25] = {};			//store original values of valh for use later
 	int rmarker[25] = {};			//mark r columns
 	int rmark[25] = {};			//extend rmarker array to fit max
-	float dizi[10][25] = {};		//midline array values
-	float zj[1][25] = {};			//Zj line
-	float cz[1][25] = {};			//Cj-Zj line	
+	double dizi[10][25] = {};		//midline array values
+	double zj[1][25] = {};			//Zj line
+	double cz[1][25] = {};			//Cj-Zj line	
 
 	int i = 0, j = 0, y = 0, d = 0, xassigner = 0, xcounter = 0, max = 0, hori = 0, ct = 0, vermax = 0,
 		z = 0, rcounter = 0, scount = 1, rcount = 1, xmax = 0, a = 0, b = 0;
-	float fre; int free;	//function occupiers
+	double fre; int free;	//function occupiers
 	string convert = "", stemp, tempS;
 	char spacee = ' '; char ent = 'a';
 
