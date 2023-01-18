@@ -9,92 +9,85 @@
 using namespace std;
 
 
+void printer( float array[][25], int valv[], int valh[], string ver, int x, int max,
+ int func, int vermax, float array2[][25], float &maxi, int &keyh, bool zway){
 
-void midprint( float dizi[][25], int valv, string ver, int x, int max){
+									// output values
+	int i, p=2, leftspace, rightspace, j;
+	char spacee=' ';
 
-									// output mid line
-	int i;
-	cout << "\n" <<valv << " " << ver << "|  ";
+	if(func==1){cout << "\n" <<valv[x] << " " << ver << "|  ";}
+
 	for (i=0;i<=max;i++){
-		if (i==max){cout <<"  | ";}
-		if (dizi[x][i]>=0){cout << " ";}
-		if (dizi[x][i]<10 && dizi[x][i]>-10){cout << " ";}
-		if (ceilf(dizi[x][i]) == dizi[x][i]){
-			cout << fixed << setprecision(0)  << dizi[x][i] << "   " << "    ";
+		leftspace=0; rightspace=4; p=2;
+
+		if(func==2){
+			array[0][i]=0;
+			for(j=0;j<=vermax;j++){
+				array[0][i]+=valv[j]*array2[j][i];
+			}
 		}
-		else {
-		cout << fixed << setprecision(2) << dizi[x][i] << "    ";
+
+		if(func==3){
+			array[0][i]=valh[i]-array2[0][i];
+		}
+
+		if (i==max&&func!=3){cout <<"  | ";}
+		if (array[x][i]>=0){leftspace++;}
+		if (array[x][i]<10 && array[x][i]>-10){leftspace++;}
+		if (ceilf(array[x][i]) == array[x][i]){
+			p=0; rightspace+=3;
+		}
+		cout << string (leftspace,spacee) << fixed << setprecision(p)  << array[x][i] << string (rightspace,spacee);
+
+		if(func==3){
+			if (zway==true){
+				if (array[0][i]>maxi){
+					maxi=array[0][i];
+					keyh=i;
+				}
+			}
+			else {
+				if (array[0][i]<maxi){					
+					maxi=array[0][i];
+					keyh=i;
+				}
+			}
 		}
 	}
 }
 
-void topfunc(char linee, string hor[], int valh[], int &max){
+void topline(char linee, string hor[], int valh[], int &max, char spacee){
 
 									// output top line
-	int i;
-	cout << "        ";
+	int i, p=8;
+	cout << string (p,spacee);
 	for (i=0;i<max;i++){
-		cout << " "<< valh[i] << "        ";
+		cout << " "<< valh[i] << string (p,spacee);
 	}
-	cout << "\n"<< "         ";
+	cout << "\n"<< string (p+1,spacee);
 	for (i=0;i<max;i++){
-		cout << hor[i] << "        ";
+		cout << hor[i] << string (p,spacee);
 	}
-	cout << "|  \n" << string (13*max,linee);
+	cout << "|  \n" << string (7+10*(max+1),linee);
 }
 
 
 void bottom( float dizi[][25], int valv[], int valh[], string ver[], string hor[],
- bool &score, char linee, int &max, bool &zway, float zj[],float cz[],int vermax, bool &oldZway, int &rcounter, bool &rmin, bool &rem){
+ bool &score, char linee, int &max, bool &zway, float zj[1][25],float cz[1][25],int vermax, bool &oldZway, int &rcounter, bool &rmin, bool &rem){
 	int i, keyh=0, keyv=0, a, b, antikeyv, j, temp=0, tempo, u, lcount=0;
 	float maxi=0, multiply, key=0;
-	cout << "\n" << string (13*max,linee);
+	cout << "\n" << string (7+10*(max+1),linee);
 
 									// output Zj
 
 	cout <<"\n  Zj|  ";
-	for (i=0;i<=max;i++){
-		zj[i]=0;
-		for(j=0;j<=vermax;j++){
-			zj[i]+=valv[j]*dizi[j][i];
-		}
-		if (i==max){cout <<"  | ";}
-		if (zj[i]>=0){cout << " ";}
-		if (zj[i]<10 && zj[i]>-10){cout << " ";}
-		if (ceilf(zj[i]) == zj[i]){
-			cout << fixed << setprecision(0)  << zj[i] << "   " << "    ";
-		}
-		else {
-		cout << fixed << setprecision(2) << zj[i] << "    ";
-		}
-	}
-									// output Cj-Zj
+	printer(zj, valv, valh, ver[0], 0, max, 2, vermax, dizi, maxi, keyh, zway);
+
+								// output Cj-Zj
 
 	cout <<"\nC-Zj|  ";
-	for (i=0;i<max;i++){
-		cz[i]=valh[i]-zj[i];
-		if (cz[i]>=0){cout << " ";}
-		if (cz[i]<10 && cz[i]>-10){cout << " ";}
-		if (ceilf(cz[i]) == cz[i]){
-			cout << fixed << setprecision(0)  << cz[i] << "   " << "    ";
-		}
-		else {
-		cout << fixed << setprecision(2) << cz[i] << "    ";
-		}
-									// finds min or max of Cj-Zj and sets it as keyh
-		if (zway==true){
-			if (cz[i]>maxi){
-				maxi=cz[i];
-				keyh=i;
-			}
-		}
-		else {
-			if (cz[i]<maxi){					
-				maxi=cz[i];
-				keyh=i;
-			}
-		}
-	}
+	printer(cz, valv, valh, ver[0], 0, max-1, 3, vermax, zj, maxi, keyh, zway);
 
 									//checks if loop has ended
 
@@ -137,7 +130,7 @@ void bottom( float dizi[][25], int valv[], int valh[], string ver[], string hor[
 
 
 void remover(float dizi[][25], string hor[], string ver[], int valh[], int valv[],
- int &max, int vermax, int rcounter, bool &rem, float zj[], float cz[], int rmark[], int tempvalh[], int xmax){
+ int &max, int vermax, int rcounter, bool &rem, float zj[1][25], float cz[1][25], int rmark[], int tempvalh[], int xmax){
 	int i, j, u, y=0;
 	bool start=false;
 	rem=false;
@@ -183,13 +176,15 @@ int main (){
 	int rmarker[25]={};			//mark r columns
 	int rmark[25]={};			//extend rmarker array to fit max
 	float dizi[10][25]={};			//midline array values
-	float zj[25]={};			//Zj line
-	float cz[25]={};			//Cj-Zj line	
+	float zj[1][25]={};			//Zj line
+	float cz[1][25]={};			//Cj-Zj line	
 
 	int i=0, j=0, y=0, d=-1, xassigner=0, xcounter=0, max=0, hori=0, ct=0, vermax=0, 
 	 z=0, rcounter=0, scount=1, rcount=1, xmax=0;
+	 float fre; int free;
 	string convert="", stemp, tempS;
 	char linee = '-';
+	char spacee = ' ';
 
 	bool zway=false, rmin=false, oldZway=false, rem=false, score=false;
 	// zway= if zmax or zmin | rmin= if rmin or normal method | oldZway= if zway was max before turning min because of rmin |
@@ -340,9 +335,9 @@ int main (){
 
 											// start the loop
 	do{
-		topfunc(linee, hor, valh, max);
+		topline(linee, hor, valh, max, spacee);
 		for(i=0;i<=vermax;i++){
-			midprint( dizi, valv[i], ver[i], i, max);
+			printer( dizi, valv, valh, ver[i], i, max, 1, 0, zj, fre, free, zway);
 		}
 		bottom(dizi, valv, valh, ver, hor, score, linee, max, zway, zj, cz, vermax, oldZway, rcounter, rmin, rem);
 		if(rem==true){ remover(dizi, hor, ver, valh, valv, max, vermax, rcounter, rem, zj, cz, rmark, tempvalh, xmax);}
@@ -354,7 +349,7 @@ int main (){
 	cout<<"\nConcluded: \n";
 	if(zway==true){cout << "Zmax=";}
 	else{cout << "Zmin=";}
-	cout << zj[max] << "\n";
+	cout << zj[0][max] << "\n";
 	for(i=0;i<=vermax;i++){
 		cout << ver[i] << "=" << valv[i] << "\n";
 	} cout << "\n";
