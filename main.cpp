@@ -3,7 +3,6 @@
 #include <iomanip>
 #include <cmath>
 #include <ctype.h>
-#include <cstdlib>
 #include <Windows.h>
 
 using namespace std;
@@ -146,15 +145,15 @@ int main() {
 	char input[250] = {};			//inputted characters
 	string hor[25] = {};			//Horizontal line S1 R -V etc.
 	string ver[25] = {};			//Vertical line of hor
-	string temphor[25] = {};			//temporary hor till i find x length
+	string temphor[25] = {};		//temporary hor till i find x length
 	int valh[25] = {};			//horizontal values of hor
 	int valv[25] = {};			//vertical values of ver
 	int dizit[25] = {};			//temporary values of > < =
-	int ci[10] = {};				//values after > < =
+	int ci[10] = {};			//values after > < =
 	int tempvalh[25] = {};			//store original values of valh for use later
 	int rmarker[25] = {};			//mark r columns
 	int rmark[25] = {};			//extend rmarker array to fit max
-	float dizi[10][25] = {};			//midline array values
+	float dizi[10][25] = {};		//midline array values
 	float zj[1][25] = {};			//Zj line
 	float cz[1][25] = {};			//Cj-Zj line	
 
@@ -172,7 +171,7 @@ int main() {
 	// input the characters
 	while (input[i - a] != '\n') {
 		cin >> noskipws >> input[i];
-		if (input[i - a] == 'x' && isdigit(input[i])) {
+		if ((input[i - a] == 'x' || input[i - a] == 'X') && isdigit(input[i])) {
 			// find numbers after x
 			stemp = "";
 			stemp = stemp + input[i];
@@ -213,7 +212,8 @@ int main() {
 				break;
 
 			case '>':
-				tempS = to_string(rcount); rcount++; temphor[hori] = "R" + tempS; rmin = true; rmarker[hori] = 1; rcounter++; hori++; temphor[hori] = "V" + tempS; dizit[hori] = -1;
+				tempS = to_string(rcount); rcount++; temphor[hori] = "R" + tempS; rmin = true; rmarker[hori] = 1; rcounter++;
+				 hori++; temphor[hori] = "V" + tempS; dizit[hori] = -1;
 				break;
 
 			case '=':
