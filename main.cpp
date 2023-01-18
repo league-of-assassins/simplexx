@@ -14,9 +14,9 @@ void printer( float array[][25], int valv[], int valh[], string ver, int x, int 
 
 									// output values
 	int i, p=2, leftspace, rightspace, j;
-	char spacee=' ';
+	char spacee=' ', linee = '-';
 
-	if(func==1){cout << "\n" <<valv[x] << " " << ver << "|  ";}
+	if(func==1){if(0==x){cout << string (7+10*(max+1),linee);} cout <<"\n" <<valv[x] << " " << ver << "|  ";}
 
 	for (i=0;i<=max;i++){
 		leftspace=0; rightspace=4; p=2;
@@ -55,12 +55,14 @@ void printer( float array[][25], int valv[], int valh[], string ver, int x, int 
 			}
 		}
 	}
+	if(func==1&&vermax==x){cout << "\n" << string (7+10*(max+1),linee);}
 }
 
-void topline(char linee, string hor[], int valh[], int &max, char spacee){
+void top( string hor[], int valh[], int &max, char spacee){
 
 									// output top line
 	int i, p=8;
+
 	cout << string (p,spacee);
 	for (i=0;i<max;i++){
 		cout << " "<< valh[i] << string (p,spacee);
@@ -69,22 +71,21 @@ void topline(char linee, string hor[], int valh[], int &max, char spacee){
 	for (i=0;i<max;i++){
 		cout << hor[i] << string (p,spacee);
 	}
-	cout << "|  \n" << string (7+10*(max+1),linee);
+	cout << "|  \n";
 }
 
 
 void bottom( float dizi[][25], int valv[], int valh[], string ver[], string hor[],
- bool &score, char linee, int &max, bool &zway, float zj[1][25],float cz[1][25],int vermax, bool &oldZway, int &rcounter, bool &rmin, bool &rem){
+ bool &score, int &max, bool &zway, float zj[1][25],float cz[1][25],int vermax, bool &oldZway, int &rcounter, bool &rmin, bool &rem){
 	int i, keyh=0, keyv=0, a, b, antikeyv, j, temp=0, tempo, u, lcount=0;
 	float maxi=0, multiply, key=0;
-	cout << "\n" << string (7+10*(max+1),linee);
 
 									// output Zj
 
 	cout <<"\n  Zj|  ";
 	printer(zj, valv, valh, ver[0], 0, max, 2, vermax, dizi, maxi, keyh, zway);
 
-								// output Cj-Zj
+									// output Cj-Zj
 
 	cout <<"\nC-Zj|  ";
 	printer(cz, valv, valh, ver[0], 0, max-1, 3, vermax, zj, maxi, keyh, zway);
@@ -181,9 +182,8 @@ int main (){
 
 	int i=0, j=0, y=0, d=-1, xassigner=0, xcounter=0, max=0, hori=0, ct=0, vermax=0, 
 	 z=0, rcounter=0, scount=1, rcount=1, xmax=0;
-	 float fre; int free;
+	float fre; int free;	//function occupiers
 	string convert="", stemp, tempS;
-	char linee = '-';
 	char spacee = ' ';
 
 	bool zway=false, rmin=false, oldZway=false, rem=false, score=false;
@@ -335,11 +335,11 @@ int main (){
 
 											// start the loop
 	do{
-		topline(linee, hor, valh, max, spacee);
+		top( hor, valh, max, spacee);
 		for(i=0;i<=vermax;i++){
-			printer( dizi, valv, valh, ver[i], i, max, 1, 0, zj, fre, free, zway);
+			printer( dizi, valv, valh, ver[i], i, max, 1, vermax, zj, fre, free, zway);
 		}
-		bottom(dizi, valv, valh, ver, hor, score, linee, max, zway, zj, cz, vermax, oldZway, rcounter, rmin, rem);
+		bottom(dizi, valv, valh, ver, hor, score, max, zway, zj, cz, vermax, oldZway, rcounter, rmin, rem);
 		if(rem==true){ remover(dizi, hor, ver, valh, valv, max, vermax, rcounter, rem, zj, cz, rmark, tempvalh, xmax);}
 		Sleep(3000);
 	}
