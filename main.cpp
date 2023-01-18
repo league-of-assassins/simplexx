@@ -8,12 +8,23 @@
 
 using namespace std;
 
+void top( string hor[], int valh[], int &max, char spacee){
+	int i, p=8;						// output top line
+
+	cout << string (p,spacee);
+	for (i=0;i<max;i++){
+		cout << " "<< valh[i] << string (p,spacee);
+	}
+	cout << "\n"<< string (p+1,spacee);
+	for (i=0;i<max;i++){
+		cout << hor[i] << string (p,spacee);
+	}
+	cout << "|  \n";
+}
 
 void printer( float array[][25], int valv[], int valh[], string ver, int x, int max,
  int func, int vermax, float array2[][25], float &maxi, int &keyh, bool zway){
-
-									// output values
-	int i, p=2, leftspace, rightspace, j;
+	int i, p=2, leftspace, rightspace, j;	// output values
 	char spacee=' ', linee = '-';
 
 	if(func==1){if(0==x){cout << string (7+10*(max+1),linee);} cout <<"\n" <<valv[x] << " " << ver << "|  ";}
@@ -58,48 +69,24 @@ void printer( float array[][25], int valv[], int valh[], string ver, int x, int 
 	if(func==1&&vermax==x){cout << "\n" << string (7+10*(max+1),linee);}
 }
 
-void top( string hor[], int valh[], int &max, char spacee){
-
-									// output top line
-	int i, p=8;
-
-	cout << string (p,spacee);
-	for (i=0;i<max;i++){
-		cout << " "<< valh[i] << string (p,spacee);
-	}
-	cout << "\n"<< string (p+1,spacee);
-	for (i=0;i<max;i++){
-		cout << hor[i] << string (p,spacee);
-	}
-	cout << "|  \n";
-}
-
-
 void bottom( float dizi[][25], int valv[], int valh[], string ver[], string hor[],
  bool &score, int &max, bool &zway, float zj[1][25],float cz[1][25],int vermax, bool &oldZway, int &rcounter, bool &rmin, bool &rem){
 	int i, keyh=0, keyv=0, a, b, antikeyv, j, temp=0, tempo, u, lcount=0;
 	float maxi=0, multiply, key=0;
 
-									// output Zj
-
-	cout <<"\n  Zj|  ";
+	cout <<"\n  Zj|  ";				// output Zj
 	printer(zj, valv, valh, ver[0], 0, max, 2, vermax, dizi, maxi, keyh, zway);
 
-									// output Cj-Zj
-
-	cout <<"\nC-Zj|  ";
+	cout <<"\nC-Zj|  ";				// output Cj-Zj
 	printer(cz, valv, valh, ver[0], 0, max-1, 3, vermax, zj, maxi, keyh, zway);
 
-									//checks if loop has ended
-
-	if (maxi==0){ 
+	if (maxi==0){ 					//checks if loop has ended
 		score=true; if(rmin==true){rmin=false; score=false; rem=true; if(oldZway==true){zway=true;}}
 		goto end;
 	}
 	maxi=0;
-									// finds keyv
 
-	for(i=0;i<=vermax;i++){
+	for(i=0;i<=vermax;i++){			// finds keyv
 		while(dizi[i][keyh]<=0){ if(i==vermax+1){goto skip;}i++;}
 		temp=dizi[i][max]/dizi[i][keyh];
 		if(i==0){tempo=temp;}
@@ -107,13 +94,11 @@ void bottom( float dizi[][25], int valv[], int valh[], string ver[], string hor[
 	}
 
 	skip:								// calculates keyv line
-
 	key=dizi[keyv][keyh];
 	for(i=0;i<=max;i++){
 		dizi[keyv][i]=dizi[keyv][i]/key;
 	}
 									// calculates other lines
-
 	for(i=0;i<=vermax+1;i++){
 		if(i==keyv){i++;}
 		multiply=dizi[i][keyh];
@@ -121,26 +106,21 @@ void bottom( float dizi[][25], int valv[], int valh[], string ver[], string hor[
 			dizi[i][j]=dizi[i][j]-multiply*dizi[keyv][j];
 		}
 	}
-
 									// sets new ver according to keyv and keyh
-
 	valv[keyv]=valh[keyh];
 	ver[keyv]=hor[keyh];
 	end:cout << "\n\n\n";
 }
-
 
 void remover(float dizi[][25], string hor[], string ver[], int valh[], int valv[],
  int &max, int vermax, int rcounter, bool &rem, float zj[1][25], float cz[1][25], int rmark[], int tempvalh[], int xmax){
 	int i, j, u, y=0;
 	bool start=false;
 	rem=false;
-
 									// copy old valh to current
 	for(i=0;i<=max;i++){
 		valh[i]=tempvalh[i];
 	}
-
 									//remove R columns from array
 	u=xmax;
 	for(i=0;i<=max;i++){
@@ -153,8 +133,6 @@ void remover(float dizi[][25], string hor[], string ver[], int valh[], int valv[
 			u++;
 		}
 	}
-
-
 									//copy valh to valv
 	for(i=0;i<=vermax+1;i++){
 		for(j=0;j<=max;j++){
@@ -191,9 +169,7 @@ int main (){
 	// rem= if should start remover function | score= if loop has ended
 
 	cout << "\n Enter the equations. Example: \n Zmin=6x1+1x2 6x1+2x2=5 8x1+6x2>12 2x1+4x2<8 or Zmax=6x1+8x2 30x1+20x2<300 5x1+10x2<110 Press enter to stop \n\n";
-
 											// input the characters
-
 	while(input[i-1]!='\n'){
 		cin >> noskipws>> input[i];
 		if(input[i-1]=='x'&&isdigit(input[i])){
@@ -207,7 +183,6 @@ int main (){
 			stemp="";
 			stemp=stemp+input[i];
 			xassigner=stoi(stemp)-1;
-
 											// set array 0 if x skipped
 			while(xcounter!=xassigner){
 				if(d<0){valh[xcounter]=0;}
@@ -228,9 +203,7 @@ int main (){
 			if(max<xassigner){max=xassigner;}
 			xcounter++;
 		}
-
 											//check chars > < =
-
 		if (input[i-1]=='<'||input[i-1]=='>'||input[i-1]=='='&&isdigit(input[i-2])){
 			dizit[hori]=1;
 			switch (input[i-1]){
@@ -259,7 +232,6 @@ int main (){
 	max+=1;
 	xmax=max;
 	max+=hori;
-
 											// find val which was recorded above
 	j=0;
 	for(i=0;i<ct;i++){
@@ -278,8 +250,6 @@ int main (){
 	else if (strstr(input,"i")||strstr(input,"I")||strstr(input,"İ")){
 		zway=false;
 	}
-
-
 											// set hor
 	tempS="";
 	for(i=0;i<xmax;i++){
@@ -289,7 +259,6 @@ int main (){
 	for(i=xmax;i<=xmax+hori;i++){
 		hor[i]=temphor[i-xmax];
 	}			
-
 											// set ver
 	y=0;
 	for(i=0;i<=vermax+1;i++){
@@ -325,14 +294,12 @@ int main (){
 	for(i=vermax;i<=max;i++){
 		rmark[i]=rmarker[i-vermax];
 	}
-
 											// add values of > < = to midline
 	y=0;
 	for (i=xmax;i<max;i++){
 		if(dizit[i-xmax]==-1){y-=1;}
 		dizi[i-xmax+y][i]=dizit[i-xmax];
 	}
-
 											// start the loop
 	do{
 		top( hor, valh, max, spacee);
@@ -344,7 +311,6 @@ int main (){
 		Sleep(3000);
 	}
 	while (score!=true);
-
 											// output the answers
 	cout<<"\nConcluded: \n";
 	if(zway==true){cout << "Zmax=";}
