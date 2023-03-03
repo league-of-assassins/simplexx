@@ -275,8 +275,8 @@ int main() {
 	}
 	//set rest of valh 0
 	y = 0;
-	if (rmin == true) { y = vermax + 1; }
-	for (i = vermax + 1 - y; i <= xmax; i++) {
+	if (rmin == true) { y = xmax; }
+	for (i = xmax - y; i <= xmax; i++) {
 		valh[i] = 0;
 	}
 	//set valh and valv of rmin
