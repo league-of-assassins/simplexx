@@ -317,7 +317,7 @@ int main() {
 	else { cout << "Zmin="; }
 	cout << zj[0][max] << "\n";
 	for (i = 0; i <= vermax; i++) {
-		cout << ver[i] << "=" << valv[i] << "\n";
+		cout << ver[i] << "=" << dizi[i][max] << "\n";
 	} cout << "\n";
 
 	while (ent != '\n') { cin >> ent; }
