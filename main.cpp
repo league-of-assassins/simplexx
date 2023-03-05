@@ -177,16 +177,16 @@ void remover(double mid[10][25], string hor[25], string ver[25], int valh[25], i
 
 int main() {
 	char input[250] = {};			//inputted characters
-	string hor[25] = {};			//Horizontal line S1 R -V etc.
+	string hor[25] = {};			//Horizontal line of Cj values (S R -V)
 	string ver[25] = {};			//Vertical line of hor
-	string temphor[25] = {};		//temporary hor till i find x length
+	string temphor[25] = {};		//temporary hor till x length is found
 	int valh[25] = {};			//horizontal values of hor
 	int valv[25] = {};			//vertical values of ver
 	double dizit[25] = {};			//temporary values of relational operators (< > =)
-	int ci[10] = {};			//values after relational operators
-	double tempvalh[25] = {};		//store original values of valh for use later
-	int rmarker[25] = {};			//mark r columns
-	int rmark[25] = {};			//extend rmarker array to fit max
+	int ci[10] = {};			//values coming after relational operators
+	double tempvalh[25] = {};		//store original values of valh for later use
+	int rmarker[25] = {};			//mark R columns
+	int rmark[25] = {};			//extend rmarker array to fit max length
 	double mid[10][25] = {};		//midline array values
 	double tempdizi[25] = {};		//store mid
 	double zj[1][25] = {};			//Zj line
@@ -194,8 +194,8 @@ int main() {
 	int tempanswer[10][25] = {};
 
 	int i = 0, j = 0, y = 0, d = 0, xassigner = 0, xcounter = 0, max = 0, hori = 0, ct = 0, vermax = 0, keyh = 0,
-		z = 0, rcounter = 0, scount = 1, rcount = 1, xmax = 0, a = 0, b = 0, k = 0;
-	double fre, intempo = 0; int free;
+		z = 0, rcounter = 0, scount = 1, rcount = 1, xmax = 0, a = 0, b = 0, k = 0, free = 0;
+	double fre = 0, intempo = 0;
 	string convert = "", stemp, tempS;
 	char spacee = ' '; char ent = 'a';
 
@@ -203,9 +203,9 @@ int main() {
 	// zway= if zmax or zmin | rmin= if rmin or normal method | oldZway= if zway was max before turning min because of rmin |
 	// rem= if should start remover function | score= if loop has ended | integ= for integer values | passint= new loop with integer type
 
-	cout << "\n Enter the equations. Example: \n\n 	Zmin=6x1+1x2 6x1+2x2=5 8x1+6x2>12 2x1+4x2<8 \n\n 	Zmax=6x1+8x2 30x1+20x2<300 5x1+10x2<110";
+	cout << "\n Enter the equations. Examples: \n\n 	Zmin=6x1+1x2 6x1+2x2=5 8x1+6x2>12 2x1+4x2<8 \n\n 	Zmax=6x1+8x2 30x1+20x2<300 5x1+10x2<110";
 	cout << "\n\n 	Zmax=8x1+60x2+15x3+2x4+20x5+100x6+80x7+200x8+6x9 0.2x1+1.2x2+0.8x3+0.1x4+2x5+3.5x6+1.5x7+4x8+2x9<20 -t \n\n";
-	cout << " Options:	-t	for integer values. Press enter for next step \n\n";
+	cout << " Options:	-t	for integer values. Press [Enter] for next step \n\n";
 
 	// input the characters
 	while (input[i - a] != '\n') {
