@@ -12,8 +12,8 @@ void printer(double array[][25], int valv[25], int valh[25], string ver, int x, 
 	int i, p = 2, leftspace, rightspace, j;
 	char spacee = ' ', linee = '-';
 
-	if(func==1 && x==0){ //output top
-		p=8;
+	if (func == 1 && x == 0) { //output top
+		p = 8;
 		cout << string(p, spacee);
 		for (i = 0; i < max; i++) {
 			cout << " " << valh[i] << string(p, spacee);
@@ -23,7 +23,7 @@ void printer(double array[][25], int valv[25], int valh[25], string ver, int x, 
 			cout << hor[i] << string(p, spacee);
 		}
 		cout << "|  \n";
-		p=2;
+		p = 2;
 	}
 	// output values
 	if (func == 1) { if (0 == x) { cout << string(7 + 10 * (max + 1), linee); } cout << "\n" << valv[x] << " " << ver << "|  "; }
@@ -45,8 +45,8 @@ void printer(double array[][25], int valv[25], int valh[25], string ver, int x, 
 		if (i == max && func != 3) { cout << "  | "; }
 		if (array[x][i] >= 0) { leftspace++; }
 		if (array[x][i]<10 && array[x][i]>-10) { leftspace++; }
-		if (ceilf(array[x][i]) == array[x][i]) {
-			p = 0; rightspace += 3;cout;
+		if (ceil(array[x][i]) == array[x][i]) {
+			p = 0; rightspace += 3; cout;
 		}
 		cout << string(leftspace, spacee) << fixed << setprecision(p) << array[x][i] << string(rightspace, spacee);
 
@@ -69,10 +69,10 @@ void printer(double array[][25], int valv[25], int valh[25], string ver, int x, 
 }
 
 void bottom(double dizi[10][25], int valv[25], int valh[25], string ver[25], string hor[25], bool& score, int& max, bool& zway,
-	 double zj[1][25], double cz[1][25], int vermax, bool& oldZway, int& rcounter, bool& rmin, bool& rem, bool& integ, double& intempo,
-	 double tempdizi[25], int& keyh, bool& passint, int tempanswer [10][25], int& nen) {
-	int i, keyv = 0, j, lcount = 0, intemp=0;
-	double maxi = 0, multiply, key = 0, temp = 0, tempo = 0, intempor=0;
+	double zj[1][25], double cz[1][25], int vermax, bool& oldZway, int& rcounter, bool& rmin, bool& rem, bool& integ, double& intempo,
+	double tempdizi[25], int& keyh, bool& passint, int tempanswer[10][25], int& nen) {
+	int i, keyv = 0, j, lcount = 0, intemp = 0;
+	double maxi = 0, multiply, key = 0, temp = 0, tempo = 0, intempor = 0;
 
 	// output Zj
 	cout << "\n  Zj|  ";
@@ -83,30 +83,31 @@ void bottom(double dizi[10][25], int valv[25], int valh[25], string ver[25], str
 
 	if (maxi == 0) { 					//checks if loop has ended
 		//turn to integer
-		if(integ==true){
-			intemp=dizi[0][max];
-			if(dizi[0][max]==intemp&&passint==true){goto sc;}
-			dizi[0][max]=intemp; intempor=tempdizi[keyh]*intemp;
-			if(passint==true){passint=false; goto end;}
-			
-			if(intempo!=intempor){
-				tempanswer[nen][0]=keyh;
-				tempanswer[nen][1]=dizi[0][max];
-				cout << "\n\n 	"<<hor[keyh]<<": "<<tempanswer[nen][1] << " New Sequence..\n";
+		if (integ == true) {
+			intemp = dizi[0][max];
+			if (dizi[0][max] == intemp && passint == true) { goto sc; }
+			dizi[0][max] = intemp; intempor = tempdizi[keyh] * intemp;
+			if (passint == true) { passint = false; goto end; }
+
+			if (intempo != intempor) {
+				tempanswer[nen][0] = keyh;
+				tempanswer[nen][1] = dizi[0][max];
+				cout << "\n\n 	" << hor[keyh] << ": " << tempanswer[nen][1] << " New Sequence..\n";
 				nen++;
-				passint=true;
-				for(i=0;i<max;i++){
-					while(dizi[0][i]==0){i++;}
-					dizi[0][i]=tempdizi[i];
+				passint = true;
+				for (i = 0; i < max; i++) {
+					while (dizi[0][i] == 0) { i++; }
+					dizi[0][i] = tempdizi[i];
 				}
-				dizi[0][max]=intempo-intempor;
-				intempo=dizi[0][max];
-				valh[keyh]=0;
-				dizi[0][keyh]=0;
-				valv[0]=0;
-				ver[0]=hor[max-1];
-			}goto end;}
-		sc:score = true; if (rmin == true) { rmin = false; score = false; rem = true; if (oldZway == true) { zway = true; } }
+				dizi[0][max] = intempo - intempor;
+				intempo = dizi[0][max];
+				valh[keyh] = 0;
+				dizi[0][keyh] = 0;
+				valv[0] = 0;
+				ver[0] = hor[max - 1];
+			}goto end;
+		}
+	sc:score = true; if (rmin == true) { rmin = false; score = false; rem = true; if (oldZway == true) { zway = true; } }
 		goto end;
 	}
 	maxi = 0;
@@ -118,7 +119,8 @@ void bottom(double dizi[10][25], int valv[25], int valh[25], string ver[25], str
 		if (tempo > temp) { keyv = i; tempo = temp; }
 	}
 
-skip:								// calculates keyv line
+skip:								
+	// calculates keyv line
 	key = dizi[keyv][keyh];
 	for (i = 0; i <= max; i++) {
 		dizi[keyv][i] = dizi[keyv][i] / key;
@@ -180,18 +182,18 @@ int main() {
 	int rmarker[25] = {};			//mark r columns
 	int rmark[25] = {};			//extend rmarker array to fit max
 	double dizi[10][25] = {};		//midline array values
-	double tempdizi[25]={};
+	double tempdizi[25] = {};
 	double zj[1][25] = {};			//Zj line
 	double cz[1][25] = {};			//Cj-Zj line	
-	int tempanswer[10][25]={};
+	int tempanswer[10][25] = {};
 
-	int i = 0, j = 0, y = 0, d = 0, xassigner = 0, xcounter = 0, max = 0, hori = 0, ct = 0, vermax = 0, keyh=0,
-		z = 0, rcounter = 0, scount = 1, rcount = 1, xmax = 0, a = 0, b = 0, nen=0;
-	double fre, intempo=0; int free;
+	int i = 0, j = 0, y = 0, d = 0, xassigner = 0, xcounter = 0, max = 0, hori = 0, ct = 0, vermax = 0, keyh = 0,
+		z = 0, rcounter = 0, scount = 1, rcount = 1, xmax = 0, a = 0, b = 0, nen = 0;
+	double fre, intempo = 0; int free;
 	string convert = "", stemp, tempS;
 	char spacee = ' '; char ent = 'a';
 
-	bool zway = false, rmin = false, oldZway = false, rem = false, score = false, db = true, integ = false, passint=true;
+	bool zway = false, rmin = false, oldZway = false, rem = false, score = false, db = true, integ = false, passint = true;
 	// zway= if zmax or zmin | rmin= if rmin or normal method | oldZway= if zway was max before turning min because of rmin |
 	// rem= if should start remover function | score= if loop has ended | integ= for integer values
 
@@ -202,7 +204,7 @@ int main() {
 
 	while (input[i - a] != '\n') {
 		cin >> noskipws >> input[i];
-		if(input[i-a]=='t'||input[i-a]=='T'){integ=true;}
+		if (input[i - a] == 't' || input[i - a] == 'T') { integ = true; }
 		if ((input[i - a] == 'x' || input[i - a] == 'X') && isdigit(input[i])) {
 			// find numbers after x
 			stemp = "";
@@ -216,7 +218,7 @@ int main() {
 			}
 			// find numbers before x
 			j = 2;
-			while (isdigit(input[i - j])||input[i-j]=='.') {
+			while (isdigit(input[i - j]) || input[i - j] == '.') {
 				convert = input[i - j] + convert;
 				j++;
 			}
@@ -245,7 +247,7 @@ int main() {
 
 			case '>':
 				tempS = to_string(rcount); rcount++; temphor[hori] = "R" + tempS; rmin = true; rmarker[hori] = 1; rcounter++;
-				 hori++; temphor[hori] = "V" + tempS; dizit[hori] = -1;
+				hori++; temphor[hori] = "V" + tempS; dizit[hori] = -1;
 				break;
 
 			case '=':
@@ -262,23 +264,23 @@ int main() {
 	}
 
 	vermax = d; max += 1; xmax = max; max += hori;
-	
+
 	//store dizi
-	for(i=0;i<=max;i++){
-		tempdizi[i]=dizi[0][i];
+	for (i = 0; i <= max; i++) {
+		tempdizi[i] = dizi[0][i];
 	}
 	// find val which was recorded above
 	j = 0;
 	for (i = 0; i < ct; i++) {
 		tempS = "";
 		y = 0;
-		while (isdigit(input[ci[i] + y])||input[ci[i]+y]=='.') {
+		while (isdigit(input[ci[i] + y]) || input[ci[i] + y] == '.') {
 			tempS = tempS + input[ci[i] + y];
 			y++;
 		}
 		dizi[i][max] = stod(tempS);
 	}
-	intempo=dizi[0][max];
+	intempo = dizi[0][max];
 	// check if zmax or zmin
 	if (strstr(input, "a") || strstr(input, "A")) {
 		zway = true; oldZway = true; if (rmin == true) { zway = false; }
@@ -338,18 +340,18 @@ int main() {
 	}
 	// start the loop
 	do {
-		if(integ==true){
-			dizi[0][max]=round(dizi[0][max]*10000)/10000.0;
-			for(i=0;i<max;i++){
-				dizi[0][i]=round(dizi[0][i]*10000)/10000.0;
-				if(dizi[0][i]>dizi[0][max]){valh[i]=0;dizi[0][i]=0;}
+		if (integ == true) {
+			dizi[0][max] = round(dizi[0][max] * 10000) / 10000.0;
+			for (i = 0; i < max; i++) {
+				dizi[0][i] = round(dizi[0][i] * 10000) / 10000.0;
+				if (dizi[0][i] > dizi[0][max]) { valh[i] = 0; dizi[0][i] = 0; }
 			}
 		}
 		for (i = 0; i <= vermax; i++) {
 			printer(dizi, valv, valh, ver[i], i, max, 1, vermax, zj, fre, free, zway, hor);
 		}
 		bottom(dizi, valv, valh, ver, hor, score, max, zway, zj, cz, vermax, oldZway, rcounter, rmin, rem, integ, intempo,
-		 tempdizi, keyh, passint, tempanswer, nen);
+			tempdizi, keyh, passint, tempanswer, nen);
 		if (rem == true) { remover(dizi, hor, ver, valh, valv, max, vermax, rcounter, rem, zj, cz, rmark, tempvalh, xmax); }
 		while (ent != '\n') { cin >> ent; } ent = 'a';
 	} while (score != true);
@@ -357,14 +359,14 @@ int main() {
 	// output the answers
 	cout << "\nConcluded:\n";
 
-	if(integ==true){
-		tempanswer[nen][0]=keyh;
-		tempanswer[nen][1]=dizi[0][max];
-		for(i=0;i<=nen;i++){
-			cout <<"\n" <<hor[tempanswer[i][0]]<<": "<< tempanswer[i][1];
+	if (integ == true) {
+		tempanswer[nen][0] = keyh;
+		tempanswer[nen][1] = dizi[0][max];
+		for (i = 0; i <= nen; i++) {
+			cout << "\n" << hor[tempanswer[i][0]] << ": " << tempanswer[i][1];
 		}
 	}
-	else{
+	else {
 		if (zway == true) { cout << "Zmax="; }
 		else { cout << "Zmin="; }
 		cout << zj[0][max] << "\n";
