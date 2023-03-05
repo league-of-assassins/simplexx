@@ -7,24 +7,24 @@
 
 using namespace std;
 
-void top(string hor[25], int valh[25], int& max, char spacee) {
-	int i, p = 8;						// output top line
-
-	cout << string(p, spacee);
-	for (i = 0; i < max; i++) {
-		cout << " " << valh[i] << string(p, spacee);
-	}
-	cout << "\n" << string(p + 1, spacee);
-	for (i = 0; i < max; i++) {
-		cout << hor[i] << string(p, spacee);
-	}
-	cout << "|  \n";
-}
-
 void printer(double array[][25], int valv[25], int valh[25], string ver, int x, int max,
-	int func, int vermax, double array2[][25], double& maxi, int& keyh, bool zway) {
+	int func, int vermax, double array2[][25], double& maxi, int& keyh, bool zway, string hor[25]) {
 	int i, p = 2, leftspace, rightspace, j;
 	char spacee = ' ', linee = '-';
+
+	if(func==1 && x==0){ //output top
+		p=8;
+		cout << string(p, spacee);
+		for (i = 0; i < max; i++) {
+			cout << " " << valh[i] << string(p, spacee);
+		}
+		cout << "\n" << string(p + 1, spacee);
+		for (i = 0; i < max; i++) {
+			cout << hor[i] << string(p, spacee);
+		}
+		cout << "|  \n";
+		p=2;
+	}
 	// output values
 	if (func == 1) { if (0 == x) { cout << string(7 + 10 * (max + 1), linee); } cout << "\n" << valv[x] << " " << ver << "|  "; }
 
@@ -68,19 +68,45 @@ void printer(double array[][25], int valv[25], int valh[25], string ver, int x, 
 	if (func == 1 && vermax == x) { cout << "\n" << string(7 + 10 * (max + 1), linee); }
 }
 
-void bottom(double dizi[10][25], int valv[25], int valh[25], string ver[25], string hor[25],
-	bool& score, int& max, bool& zway, double zj[1][25], double cz[1][25], int vermax, bool& oldZway, int& rcounter, bool& rmin, bool& rem) {
-	int i, keyh = 0, keyv = 0, j, lcount = 0;
-	double maxi = 0, multiply, key = 0, temp = 0, tempo = 0;
+void bottom(double dizi[10][25], int valv[25], int valh[25], string ver[25], string hor[25], bool& score, int& max, bool& zway,
+	 double zj[1][25], double cz[1][25], int vermax, bool& oldZway, int& rcounter, bool& rmin, bool& rem, bool& integ, double& intempo,
+	 double tempdizi[25], int& keyh, bool& passint, int tempanswer [10][25], int& nen) {
+	int i, keyv = 0, j, lcount = 0, intemp=0;
+	double maxi = 0, multiply, key = 0, temp = 0, tempo = 0, intempor=0;
+
 	// output Zj
 	cout << "\n  Zj|  ";
-	printer(zj, valv, valh, ver[0], 0, max, 2, vermax, dizi, maxi, keyh, zway);
+	printer(zj, valv, valh, ver[0], 0, max, 2, vermax, dizi, maxi, keyh, zway, hor);
 	// output Cj-Zj
 	cout << "\nC-Zj|  ";
-	printer(cz, valv, valh, ver[0], 0, max - 1, 3, vermax, zj, maxi, keyh, zway);
+	printer(cz, valv, valh, ver[0], 0, max - 1, 3, vermax, zj, maxi, keyh, zway, hor);
 
 	if (maxi == 0) { 					//checks if loop has ended
-		score = true; if (rmin == true) { rmin = false; score = false; rem = true; if (oldZway == true) { zway = true; } }
+		//turn to integer
+		if(integ==true){
+			intemp=dizi[0][max];
+			if(dizi[0][max]==intemp&&passint==true){goto sc;}
+			dizi[0][max]=intemp; intempor=tempdizi[keyh]*intemp;
+			if(passint==true){passint=false; goto end;}
+			
+			if(intempo!=intempor){
+				tempanswer[nen][0]=keyh;
+				tempanswer[nen][1]=dizi[0][max];
+				cout << "\n\n 	"<<hor[keyh]<<": "<<tempanswer[nen][1] << " New Sequence..\n";
+				nen++;
+				passint=true;
+				for(i=0;i<max;i++){
+					while(dizi[0][i]==0){i++;}
+					dizi[0][i]=tempdizi[i];
+				}
+				dizi[0][max]=intempo-intempor;
+				intempo=dizi[0][max];
+				valh[keyh]=0;
+				dizi[0][keyh]=0;
+				valv[0]=0;
+				ver[0]=hor[max-1];
+			}goto end;}
+		sc:score = true; if (rmin == true) { rmin = false; score = false; rem = true; if (oldZway == true) { zway = true; } }
 		goto end;
 	}
 	maxi = 0;
@@ -98,7 +124,7 @@ skip:								// calculates keyv line
 		dizi[keyv][i] = dizi[keyv][i] / key;
 	}
 	// calculates other lines
-	for (i = 0; i <= vermax + 1; i++) {
+	for (i = 0; i <= vermax; i++) {
 		if (i == keyv) { i++; }
 		multiply = dizi[i][keyh];
 		for (j = 0; j <= max; j++) {
@@ -112,7 +138,7 @@ end:cout << "\n\n\n";
 }
 
 void remover(double dizi[10][25], string hor[25], string ver[25], int valh[25], int valv[25],
-	int& max, int vermax, int rcounter, bool& rem, double zj[1][25], double cz[1][25], int rmark[25], int tempvalh[25], int xmax) {
+	int& max, int vermax, int rcounter, bool& rem, double zj[1][25], double cz[1][25], int rmark[25], double tempvalh[25], int xmax) {
 	int i, j, u, y = 0;
 	bool start = false;
 	rem = false;
@@ -148,34 +174,40 @@ int main() {
 	string temphor[25] = {};		//temporary hor till i find x length
 	int valh[25] = {};			//horizontal values of hor
 	int valv[25] = {};			//vertical values of ver
-	int dizit[25] = {};			//temporary values of > < =
+	double dizit[25] = {};			//temporary values of > < =
 	int ci[10] = {};			//values after > < =
-	int tempvalh[25] = {};			//store original values of valh for use later
+	double tempvalh[25] = {};			//store original values of valh for use later
 	int rmarker[25] = {};			//mark r columns
 	int rmark[25] = {};			//extend rmarker array to fit max
 	double dizi[10][25] = {};		//midline array values
+	double tempdizi[25]={};
 	double zj[1][25] = {};			//Zj line
 	double cz[1][25] = {};			//Cj-Zj line	
+	int tempanswer[10][25]={};
 
-	int i = 0, j = 0, y = 0, d = 0, xassigner = 0, xcounter = 0, max = 0, hori = 0, ct = 0, vermax = 0,
-		z = 0, rcounter = 0, scount = 1, rcount = 1, xmax = 0, a = 0, b = 0;
-	double fre; int free;	//function occupiers
+	int i = 0, j = 0, y = 0, d = 0, xassigner = 0, xcounter = 0, max = 0, hori = 0, ct = 0, vermax = 0, keyh=0,
+		z = 0, rcounter = 0, scount = 1, rcount = 1, xmax = 0, a = 0, b = 0, nen=0;
+	double fre, intempo=0; int free;
 	string convert = "", stemp, tempS;
 	char spacee = ' '; char ent = 'a';
 
-	bool zway = false, rmin = false, oldZway = false, rem = false, score = false, db = true;
+	bool zway = false, rmin = false, oldZway = false, rem = false, score = false, db = true, integ = false, passint=true;
 	// zway= if zmax or zmin | rmin= if rmin or normal method | oldZway= if zway was max before turning min because of rmin |
-	// rem= if should start remover function | score= if loop has ended
+	// rem= if should start remover function | score= if loop has ended | integ= for integer values
 
-	cout << "\n Enter the equations. Example: \n Zmin=6x1+1x2 6x1+2x2=5 8x1+6x2>12 2x1+4x2<8 or Zmax=6x1+8x2 30x1+20x2<300 5x1+10x2<110 Press enter for next step \n\n";
+	cout << "\n Enter the equations. Example: \n\n 	Zmin=6x1+1x2 6x1+2x2=5 8x1+6x2>12 2x1+4x2<8 \n\n 	Zmax=6x1+8x2 30x1+20x2<300 5x1+10x2<110";
+	cout << "\n\n 	Zmax=8x1+60x2+15x3+2x4+20x5+100x6+80x7+200x8+6x9 0.2x1+1.2x2+0.8x3+0.1x4+2x5+3.5x6+1.5x7+4x8+2x9<20 -t \n\n";
+	cout << " Options:	-t	for integer values. Press enter for next step \n\n";
 	// input the characters
+
 	while (input[i - a] != '\n') {
 		cin >> noskipws >> input[i];
+		if(input[i-a]=='t'||input[i-a]=='T'){integ=true;}
 		if ((input[i - a] == 'x' || input[i - a] == 'X') && isdigit(input[i])) {
 			// find numbers after x
 			stemp = "";
 			stemp = stemp + input[i];
-			xassigner = stoi(stemp) - 1;
+			xassigner = stod(stemp) - 1;
 			// set array 0 if x skipped
 			while (xcounter != xassigner) {
 				if (d == 0 && db == true) { valh[xcounter] = 0; }
@@ -184,17 +216,17 @@ int main() {
 			}
 			// find numbers before x
 			j = 2;
-			while (isdigit(input[i - j])) {
+			while (isdigit(input[i - j])||input[i-j]=='.') {
 				convert = input[i - j] + convert;
 				j++;
 			}
 			// create array with numbers before x
 			if (d == 0 && db == true) {
-				valh[xassigner] = stoi(convert);
+				valh[xassigner] = stod(convert);
 				if (input[i - j - 1] == '-') { valh[xassigner] = 0 - valh[xassigner]; }
 			}
 			else {
-				dizi[d][xassigner] = stoi(convert);
+				dizi[d][xassigner] = stod(convert);
 				if (input[i - j - 1] == '-') { dizi[d][xassigner] = 0 - dizi[d][xassigner]; }
 			}
 			convert = "";
@@ -229,21 +261,24 @@ int main() {
 		i++;
 	}
 
-	vermax = d;
-	max += 1;
-	xmax = max;
-	max += hori;
+	vermax = d; max += 1; xmax = max; max += hori;
+	
+	//store dizi
+	for(i=0;i<=max;i++){
+		tempdizi[i]=dizi[0][i];
+	}
 	// find val which was recorded above
 	j = 0;
 	for (i = 0; i < ct; i++) {
 		tempS = "";
 		y = 0;
-		while (isdigit(input[ci[i] + y])) {
+		while (isdigit(input[ci[i] + y])||input[ci[i]+y]=='.') {
 			tempS = tempS + input[ci[i] + y];
 			y++;
 		}
-		dizi[i][max] = stoi(tempS);
+		dizi[i][max] = stod(tempS);
 	}
+	intempo=dizi[0][max];
 	// check if zmax or zmin
 	if (strstr(input, "a") || strstr(input, "A")) {
 		zway = true; oldZway = true; if (rmin == true) { zway = false; }
@@ -267,7 +302,7 @@ int main() {
 		ver[i] = hor[i + xmax + y];
 		valv[i] = 0;
 	}
-	//set tempvalh in case rmin
+	//store valh
 	if (rmin == true) {
 		for (i = 0; i <= xmax + hori; i++) {
 			tempvalh[i] = valh[i];
@@ -303,21 +338,39 @@ int main() {
 	}
 	// start the loop
 	do {
-		top(hor, valh, max, spacee);
-		for (i = 0; i <= vermax; i++) {
-			printer(dizi, valv, valh, ver[i], i, max, 1, vermax, zj, fre, free, zway);
+		if(integ==true){
+			dizi[0][max]=round(dizi[0][max]*10000)/10000.0;
+			for(i=0;i<max;i++){
+				dizi[0][i]=round(dizi[0][i]*10000)/10000.0;
+				if(dizi[0][i]>dizi[0][max]){valh[i]=0;dizi[0][i]=0;}
+			}
 		}
-		bottom(dizi, valv, valh, ver, hor, score, max, zway, zj, cz, vermax, oldZway, rcounter, rmin, rem);
+		for (i = 0; i <= vermax; i++) {
+			printer(dizi, valv, valh, ver[i], i, max, 1, vermax, zj, fre, free, zway, hor);
+		}
+		bottom(dizi, valv, valh, ver, hor, score, max, zway, zj, cz, vermax, oldZway, rcounter, rmin, rem, integ, intempo,
+		 tempdizi, keyh, passint, tempanswer, nen);
 		if (rem == true) { remover(dizi, hor, ver, valh, valv, max, vermax, rcounter, rem, zj, cz, rmark, tempvalh, xmax); }
 		while (ent != '\n') { cin >> ent; } ent = 'a';
 	} while (score != true);
+
 	// output the answers
 	cout << "\nConcluded:\n";
-	if (zway == true) { cout << "Zmax="; }
-	else { cout << "Zmin="; }
-	cout << zj[0][max] << "\n";
-	for (i = 0; i <= vermax; i++) {
-		cout << ver[i] << "=" << dizi[i][max] << "\n";
+
+	if(integ==true){
+		tempanswer[nen][0]=keyh;
+		tempanswer[nen][1]=dizi[0][max];
+		for(i=0;i<=nen;i++){
+			cout <<"\n" <<hor[tempanswer[i][0]]<<": "<< tempanswer[i][1];
+		}
+	}
+	else{
+		if (zway == true) { cout << "Zmax="; }
+		else { cout << "Zmin="; }
+		cout << zj[0][max] << "\n";
+		for (i = 0; i <= vermax; i++) {
+			cout << ver[i] << "=" << dizi[i][max] << "\n";
+		}
 	} cout << "\n";
 
 	while (ent != '\n') { cin >> ent; }
