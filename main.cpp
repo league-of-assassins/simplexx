@@ -177,21 +177,21 @@ void remover(double mid[10][25], string cj_hor_name[25], string cj_ver_name[25],
 
 int main() {
 	char input[250] = {};			//inputted characters
-	string cj_hor_name[25] = {};			//Horizontal line of Cj variables (S R -V)
-	string cj_ver_name[25] = {};			//Vertical variation of cj_hor_name
-	string cj_hor_name_temp[25] = {};		//temporary cj_hor_name till x length is found
-	int cj_hor_val[25] = {};			//horizontal values of cj_hor_name
-	int cj_ver_val[25] = {};			//vertical values of cj_ver_name
-	double cj_hor_val_original[25] = {};		//store original values of cj_hor_val for later use
+	string cj_hor_name[25] = {};		//Horizontal line of Cj variables (S R -V)
+	string cj_ver_name[25] = {};		//Vertical variation of cj_hor_name
+	string cj_hor_name_temp[25] = {};	//temporary cj_hor_name till x length is found
+	int cj_hor_val[25] = {};		//horizontal values of cj_hor_name
+	int cj_ver_val[25] = {};		//vertical values of cj_ver_name
+	double cj_hor_val_original[25] = {};	//store original values of cj_hor_val for later use
 	double mid[10][25] = {};		//midline array values
 	double mid_original[25] = {};		//original values of mid
-	double mid_operator_val[25] = {};			//temporary values of relational operators (< > =) to be added to main mid array later
-	int mid_last_val_marker[10] = {};			//last values coming after relational operators to be added to main mid array later
+	double mid_operator_val[25] = {};	//temporary values of relational operators (< > =) to be added to main mid array later
+	int mid_last_val_marker[10] = {};	//last values coming after relational operators to be added to main mid array later
 	double zj[1][25] = {};			//Zj line
 	double cz[1][25] = {};			//Cj-Zj line	
-	int rmarker_temp[25] = {};			//mark R columns
+	int rmarker_temp[25] = {};		//mark R columns
 	int rmarker[25] = {};			//extended version of rmarker with zeroes
-	int int_answers[10][25] = {};	//for recording integer method answers
+	int int_answers[10][25] = {};		//for recording integer method answers
 
 	int i = 0, j = 0, y = 0, d = 0, xassigner = 0, xcounter = 0, max_hor = 0, hori = 0, ct = 0, max_ver = 0, keyh = 0,
 		z = 0, rcounter = 0, scount = 1, rcount = 1, max_x = 0, a = 0, b = 0, k = 0, free = 0;
