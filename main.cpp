@@ -7,46 +7,46 @@
 
 using namespace std;
 
-void printer(double array[][25], int valv[25], int valh[25], string ver, int x, int max,
-	int func, int vermax, double array2[][25], double& maxi, int& keyh, bool zway, string hor[25]) {
+void printer(double array[][25], int cj_ver_val[25], int cj_hor_val[25], string cj_ver_name, int x, int max_hor,
+	int func, int max_ver, double array2[][25], double& maxi, int& keyh, bool zway, string cj_hor_name[25]) {
 	int i, p = 2, leftspace, rightspace, j;
 	char spacee = ' ', linee = '-';
 
-	//func: 1 top & mid, 2 Zj, 3 Cj-Zj
+	//func: 1 top/mid[i], 2 Zj, 3 Cj-Zj
 
 	//output top
 	if (func == 1 && x == 0) {
 		p = 8;
 		cout << string(p, spacee);
-		for (i = 0; i < max; i++) {
-			cout << " " << valh[i] << string(p, spacee);
+		for (i = 0; i < max_hor; i++) {
+			cout << " " << cj_hor_val[i] << string(p, spacee);
 		}
 		cout << "\n" << string(p + 1, spacee);
-		for (i = 0; i < max; i++) {
-			cout << hor[i] << string(p, spacee);
+		for (i = 0; i < max_hor; i++) {
+			cout << cj_hor_name[i] << string(p, spacee);
 		}
 		cout << "|  \n";
 		p = 2;
 	}
 
-	if (func == 1) { if (0 == x) { cout << string(7 + 10 * (max + 1), linee); } cout << "\n" << valv[x] << " " << ver << "|  "; }
+	if (func == 1) { if (0 == x) { cout << string(7 + 10 * (max_hor + 1), linee); } cout << "\n" << cj_ver_val[x] << " " << cj_ver_name << "|  "; }
 
 	// output mid/bottom
-	for (i = 0; i <= max; i++) {
+	for (i = 0; i <= max_hor; i++) {
 		leftspace = 0; rightspace = 4; p = 2;
 
 		if (func == 2) {
 			array[0][i] = 0;
-			for (j = 0; j <= vermax; j++) {
-				array[0][i] += valv[j] * array2[j][i];
+			for (j = 0; j <= max_ver; j++) {
+				array[0][i] += cj_ver_val[j] * array2[j][i];
 			}
 		}
 
 		if (func == 3) {
-			array[0][i] = valh[i] - array2[0][i];
+			array[0][i] = cj_hor_val[i] - array2[0][i];
 		}
 
-		if (i == max && func != 3) { cout << "  | "; }
+		if (i == max_hor && func != 3) { cout << "  | "; }
 		if (array[x][i] >= 0) { leftspace++; }
 		if (array[x][i]<10 && array[x][i]>-10) { leftspace++; }
 		if (ceil(array[x][i]) == array[x][i]) {
@@ -69,47 +69,47 @@ void printer(double array[][25], int valv[25], int valh[25], string ver, int x, 
 			}
 		}
 	}
-	if (func == 1 && vermax == x) { cout << "\n" << string(7 + 10 * (max + 1), linee); }
+	if (func == 1 && max_ver == x) { cout << "\n" << string(7 + 10 * (max_hor + 1), linee); }
 }
 
-void bottom(double mid[10][25], int valv[25], int valh[25], string ver[25], string hor[25], bool& score, int& max, bool& zway,
-	double zj[1][25], double cz[1][25], int vermax, bool& oldZway, int& rcounter, bool& rmin, bool& rem, bool& integ, double& intempo,
-	double tempdizi[25], int& keyh, bool& passint, int tempanswer[10][25], int& k) {
-	int i, keyv = 0, j, lcount = 0, intemp = 0;
+void bottom(double mid[10][25], int cj_ver_val[25], int cj_hor_val[25], string cj_ver_name[25], string cj_hor_name[25], bool& score, int& max_hor, bool& zway,
+	double zj[1][25], double cz[1][25], int max_ver, bool& oldZway, int& rcounter, bool& rmin, bool& rem, bool& integ, double& intempo,
+	double mid_original[25], int& keyh, bool& passint, int int_answers[10][25], int& k) {
+	int i, keyv = 0, j, lcount = 0, temp_int_max = 0;
 	double maxi = 0, multiply, key = 0, temp = 0, tempo = 0, intempor = 0;
 
 	// output Zj
 	cout << "\n  Zj|  ";
-	printer(zj, valv, valh, ver[0], 0, max, 2, vermax, mid, maxi, keyh, zway, hor);
+	printer(zj, cj_ver_val, cj_hor_val, cj_ver_name[0], 0, max_hor, 2, max_ver, mid, maxi, keyh, zway, cj_hor_name);
 	// output Cj-Zj
 	cout << "\nC-Zj|  ";
-	printer(cz, valv, valh, ver[0], 0, max - 1, 3, vermax, zj, maxi, keyh, zway, hor);
+	printer(cz, cj_ver_val, cj_hor_val, cj_ver_name[0], 0, max_hor - 1, 3, max_ver, zj, maxi, keyh, zway, cj_hor_name);
 
 	//checks if loop should stop or continue with new sequence
 	if (maxi == 0) {
 		//turn to integer
 		if (integ == true) {
-			intemp = mid[0][max];
-			if (mid[0][max] == intemp && passint == true) { goto sc; }
-			mid[0][max] = intemp; intempor = tempdizi[keyh] * intemp;
+			temp_int_max = mid[0][max_hor];
+			if (mid[0][max_hor] == temp_int_max && passint == true) { goto sc; }
+			mid[0][max_hor] = temp_int_max; intempor = mid_original[keyh] * temp_int_max;
 			if (passint == true) { passint = false; goto end; }
 
 			if (intempo != intempor) {
-				tempanswer[k][0] = keyh;
-				tempanswer[k][1] = mid[0][max];
-				cout << "\n\n 	" << hor[keyh] << ": " << tempanswer[k][1] << " New Sequence..\n";
+				int_answers[k][0] = keyh;
+				int_answers[k][1] = mid[0][max_hor];
+				cout << "\n\n 	" << cj_hor_name[keyh] << ": " << int_answers[k][1] << " New Sequence..\n";
 				k++;
 				passint = true;
-				for (i = 0; i < max; i++) {
+				for (i = 0; i < max_hor; i++) {
 					while (mid[0][i] == 0) { i++; }
-					mid[0][i] = tempdizi[i];
+					mid[0][i] = mid_original[i];
 				}
-				mid[0][max] = intempo - intempor;
-				intempo = mid[0][max];
-				valh[keyh] = 0;
+				mid[0][max_hor] = intempo - intempor;
+				intempo = mid[0][max_hor];
+				cj_hor_val[keyh] = 0;
 				mid[0][keyh] = 0;
-				valv[0] = 0;
-				ver[0] = hor[max - 1];
+				cj_ver_val[0] = 0;
+				cj_ver_name[0] = cj_hor_name[max_hor - 1];
 			}goto end;
 		}
 	sc:score = true; if (rmin == true) { rmin = false; score = false; rem = true; if (oldZway == true) { zway = true; } }
@@ -118,9 +118,9 @@ void bottom(double mid[10][25], int valv[25], int valh[25], string ver[25], stri
 	maxi = 0;
 
 	// finds keyv
-	for (i = 0; i <= vermax; i++) {
-		while (mid[i][keyh] <= 0) { if (i == vermax + 1) { goto skip; }i++; }
-		temp = mid[i][max] / mid[i][keyh];
+	for (i = 0; i <= max_ver; i++) {
+		while (mid[i][keyh] <= 0) { if (i == max_ver + 1) { goto skip; }i++; }
+		temp = mid[i][max_hor] / mid[i][keyh];
 		if (i == 0) { tempo = temp; }
 		if (tempo > temp) { keyv = i; tempo = temp; }
 	}
@@ -128,73 +128,73 @@ void bottom(double mid[10][25], int valv[25], int valh[25], string ver[25], stri
 skip:
 	// calculates keyv line
 	key = mid[keyv][keyh];
-	for (i = 0; i <= max; i++) {
+	for (i = 0; i <= max_hor; i++) {
 		mid[keyv][i] = mid[keyv][i] / key;
 	}
 	// calculates other lines
-	for (i = 0; i <= vermax; i++) {
+	for (i = 0; i <= max_ver; i++) {
 		if (i == keyv) { i++; }
 		multiply = mid[i][keyh];
-		for (j = 0; j <= max; j++) {
+		for (j = 0; j <= max_hor; j++) {
 			mid[i][j] = mid[i][j] - multiply * mid[keyv][j];
 		}
 	}
-	// set new ver
-	valv[keyv] = valh[keyh];
-	ver[keyv] = hor[keyh];
+	// set new cj_ver_name
+	cj_ver_val[keyv] = cj_hor_val[keyh];
+	cj_ver_name[keyv] = cj_hor_name[keyh];
 end:cout << "\n\n\n";
 }
 
-void remover(double mid[10][25], string hor[25], string ver[25], int valh[25], int valv[25],
-	int& max, int vermax, int rcounter, bool& rem, double zj[1][25], double cz[1][25], int rmark[25], double tempvalh[25], int xmax) {
+void remover(double mid[10][25], string cj_hor_name[25], string cj_ver_name[25], int cj_hor_val[25], int cj_ver_val[25],
+	int& max_hor, int max_ver, int rcounter, bool& rem, double zj[1][25], double cz[1][25], int rmarker[25], double cj_hor_val_original[25], int max_x) {
 	int i, j, u, y = 0;
 	bool start = false;
 	rem = false;
-	// copy old valh to current
-	for (i = 0; i <= max; i++) {
-		valh[i] = tempvalh[i];
+	// copy old cj_hor_val to current
+	for (i = 0; i <= max_hor; i++) {
+		cj_hor_val[i] = cj_hor_val_original[i];
 	}
 	//remove R columns from array
-	u = xmax;
-	for (i = 0; i <= max; i++) {
-		if (rmark[i] == 1) { start = true; }
-		if (rmark[i] == 0 && start == true) {
-			valh[u] = valh[i]; hor[u] = hor[i];
-			for (j = 0; j <= vermax + 1; j++) {
+	u = max_x;
+	for (i = 0; i <= max_hor; i++) {
+		if (rmarker[i] == 1) { start = true; }
+		if (rmarker[i] == 0 && start == true) {
+			cj_hor_val[u] = cj_hor_val[i]; cj_hor_name[u] = cj_hor_name[i];
+			for (j = 0; j <= max_ver + 1; j++) {
 				mid[j][u] = mid[j][i];
 			}
 			u++;
 		}
 	}
-	//copy valh to valv
-	for (i = 0; i <= vermax + 1; i++) {
-		for (j = 0; j <= max; j++) {
-			if (ver[i] == hor[j]) { valv[i] = valh[j]; }
+	//copy cj_hor_val to cj_ver_val
+	for (i = 0; i <= max_ver + 1; i++) {
+		for (j = 0; j <= max_hor; j++) {
+			if (cj_ver_name[i] == cj_hor_name[j]) { cj_ver_val[i] = cj_hor_val[j]; }
 		}
 	}
-	max -= rcounter;
+	max_hor -= rcounter;
 }
 
 int main() {
 	char input[250] = {};			//inputted characters
-	string hor[25] = {};			//Horizontal line of Cj values (S R -V)
-	string ver[25] = {};			//Vertical line of hor
-	string temphor[25] = {};		//temporary hor till x length is found
-	int valh[25] = {};			//horizontal values of hor
-	int valv[25] = {};			//vertical values of ver
-	double dizit[25] = {};			//temporary values of relational operators (< > =)
-	int ci[10] = {};			//values coming after relational operators
-	double tempvalh[25] = {};		//store original values of valh for later use
-	int rmarker[25] = {};			//mark R columns
-	int rmark[25] = {};			//extend rmarker array to fit max length
+	string cj_hor_name[25] = {};			//Horizontal line of Cj variables (S R -V)
+	string cj_ver_name[25] = {};			//Vertical variation of cj_hor_name
+	string cj_hor_name_temp[25] = {};		//temporary cj_hor_name till x length is found
+	int cj_hor_val[25] = {};			//horizontal values of cj_hor_name
+	int cj_ver_val[25] = {};			//vertical values of cj_ver_name
+	double cj_hor_val_original[25] = {};		//store original values of cj_hor_val for later use
 	double mid[10][25] = {};		//midline array values
-	double tempdizi[25] = {};		//store mid
+	double mid_original[25] = {};		//original values of mid
+	double mid_operator_val[25] = {};			//temporary values of relational operators (< > =) to be added to main mid array later
+	int mid_last_val_marker[10] = {};			//last values coming after relational operators to be added to main mid array later
 	double zj[1][25] = {};			//Zj line
 	double cz[1][25] = {};			//Cj-Zj line	
-	int tempanswer[10][25] = {};
+	int rmarker_temp[25] = {};			//mark R columns
+	int rmarker[25] = {};			//extended version of rmarker with zeroes
+	int int_answers[10][25] = {};	//for recording integer method answers
 
-	int i = 0, j = 0, y = 0, d = 0, xassigner = 0, xcounter = 0, max = 0, hori = 0, ct = 0, vermax = 0, keyh = 0,
-		z = 0, rcounter = 0, scount = 1, rcount = 1, xmax = 0, a = 0, b = 0, k = 0, free = 0;
+	int i = 0, j = 0, y = 0, d = 0, xassigner = 0, xcounter = 0, max_hor = 0, hori = 0, ct = 0, max_ver = 0, keyh = 0,
+		z = 0, rcounter = 0, scount = 1, rcount = 1, max_x = 0, a = 0, b = 0, k = 0, free = 0;
 	double fre = 0, intempo = 0;
 	string convert = "", stemp, tempS;
 	char spacee = ' '; char ent = 'a';
@@ -222,7 +222,7 @@ int main() {
 
 			// set array 0 if x skipped
 			while (xcounter != xassigner) {
-				if (d == 0 && db == true) { valh[xcounter] = 0; }
+				if (d == 0 && db == true) { cj_hor_val[xcounter] = 0; }
 				else { mid[d][xcounter] = 0; }
 				xcounter++;
 			}
@@ -236,8 +236,8 @@ int main() {
 
 			// create array with numbers before x
 			if (d == 0 && db == true) {
-				valh[xassigner] = stod(convert);
-				if (input[i - j - 1] == '-') { valh[xassigner] = 0 - valh[xassigner]; }
+				cj_hor_val[xassigner] = stod(convert);
+				if (input[i - j - 1] == '-') { cj_hor_val[xassigner] = 0 - cj_hor_val[xassigner]; }
 			}
 			else {
 				mid[d][xassigner] = stod(convert);
@@ -246,30 +246,30 @@ int main() {
 			convert = "";
 
 			//find max x
-			if (max < xassigner) { max = xassigner; }
+			if (max_x < xassigner) { max_x = xassigner; }
 			xcounter++;
 		}
 
 		//check relational operators
 		if (input[i - a] == '<' || input[i - a] == '>' || input[i - a] == '=' && isdigit(input[i - b])) {
-			dizit[hori] = 1;
+			mid_operator_val[hori] = 1;
 			switch (input[i - a]) {
 
 			case '<':
-				tempS = to_string(scount); scount++; temphor[hori] = "S" + tempS;
+				tempS = to_string(scount); scount++; cj_hor_name_temp[hori] = "S" + tempS;
 				break;
 
 			case '>':
-				tempS = to_string(rcount); rcount++; temphor[hori] = "R" + tempS; rmin = true; rmarker[hori] = 1; rcounter++;
-				hori++; temphor[hori] = "V" + tempS; dizit[hori] = -1;
+				tempS = to_string(rcount); rcount++; cj_hor_name_temp[hori] = "R" + tempS; rmin = true; rmarker_temp[hori] = 1; rcounter++;
+				hori++; cj_hor_name_temp[hori] = "V" + tempS; mid_operator_val[hori] = -1;
 				break;
 
 			case '=':
-				tempS = to_string(rcount); rcount++; temphor[hori] = "R" + tempS; rmin = true; rmarker[hori] = 1; rcounter++;
+				tempS = to_string(rcount); rcount++; cj_hor_name_temp[hori] = "R" + tempS; rmin = true; rmarker_temp[hori] = 1; rcounter++;
 				break;
 			}
-			// record the place of val which comes after ><= to find it later
-			ci[ct] = i; ct++;	hori++;
+			// mark the places of mid_last_val
+			mid_last_val_marker[ct] = i; ct++;	hori++;
 		}
 		//space moves to next line
 		if (isspace(input[i - a]) && isdigit(input[i - b]) && isdigit(input[i])) { xcounter = 0; d++; if (d == 1 && db == true) { d--; db = false; } }
@@ -277,25 +277,25 @@ int main() {
 		i++;
 	}
 
-	vermax = d; max += 1; xmax = max; max += hori;
+	max_ver = d; max_x += 1; max_hor = max_x; max_hor += hori;
 
 	//store mid
-	for (i = 0; i <= max; i++) {
-		tempdizi[i] = mid[0][i];
+	for (i = 0; i <= max_hor; i++) {
+		mid_original[i] = mid[0][i];
 	}
-	// find val which was recorded above
+	// find mid_last_val which was marked above
 	j = 0;
 	for (i = 0; i < ct; i++) {
 		tempS = "";
 		y = 0;
-		while (isdigit(input[ci[i] + y]) || input[ci[i] + y] == '.') {
-			tempS = tempS + input[ci[i] + y];
+		while (isdigit(input[mid_last_val_marker[i] + y]) || input[mid_last_val_marker[i] + y] == '.') {
+			tempS = tempS + input[mid_last_val_marker[i] + y];
 			y++;
 		}
-		mid[i][max] = stod(tempS);
+		mid[i][max_hor] = stod(tempS);
 	}
 
-	intempo = mid[0][max];
+	intempo = mid[0][max_hor];
 
 	// check if zmax or zmin
 	if (strstr(input, "a") || strstr(input, "A")) {
@@ -305,79 +305,79 @@ int main() {
 		zway = false;
 	}
 
-	// set hor
+	// set cj_hor_name
 	tempS = "";
-	for (i = 0; i < xmax; i++) {
+	for (i = 0; i < max_x; i++) {
 		tempS = to_string(i + 1);
-		hor[i] = "X" + tempS;
+		cj_hor_name[i] = "X" + tempS;
 	}
-	for (i = xmax; i <= xmax + hori; i++) {
-		hor[i] = temphor[i - xmax];
+	for (i = max_x; i <= max_x + hori; i++) {
+		cj_hor_name[i] = cj_hor_name_temp[i - max_x];
 	}
 
-	// set ver
+	// set cj_ver_name
 	y = 0;
-	for (i = 0; i <= vermax + 1; i++) {
-		if (dizit[i + y] == -1) { y++; }
-		ver[i] = hor[i + xmax + y];
-		valv[i] = 0;
+	for (i = 0; i <= max_ver + 1; i++) {
+		if (mid_operator_val[i + y] == -1) { y++; }
+		cj_ver_name[i] = cj_hor_name[i + max_x + y];
+		cj_ver_val[i] = 0;
 	}
 
-	//store valh
+	//store cj_hor_val
 	if (rmin == true) {
-		for (i = 0; i <= xmax + hori; i++) {
-			tempvalh[i] = valh[i];
+		for (i = 0; i <= max_x + hori; i++) {
+			cj_hor_val_original[i] = cj_hor_val[i];
 		}
 	}
 
-	//set rest of valh 0
+	//set rest of cj_hor_val 0
 	y = 0;
-	if (rmin == true) { y = xmax; }
-	for (i = xmax - y; i <= xmax; i++) {
-		valh[i] = 0;
+	if (rmin == true) { y = max_x; }
+	for (i = max_x - y; i <= max_x; i++) {
+		cj_hor_val[i] = 0;
 	}
 
-	//set valh and valv of rmin
+	//set cj_hor_val and cj_ver_val of rmin
 	if (rmin == true) {
 		y = 0;
-		for (i = 0; i <= max; i++) {
-			if (dizit[i] == -1) { y++; }
-			if (rmarker[i] == 1) { valh[i + xmax] = 1; valv[i - y] = 1; }
+		for (i = 0; i <= max_hor; i++) {
+			if (mid_operator_val[i] == -1) { y++; }
+			if (rmarker_temp[i] == 1) { cj_hor_val[i + max_x] = 1; cj_ver_val[i - y] = 1; }
 		}
 	}
 
-	//extends rmarker with 0 values
-	for (i = 0; i < vermax; i++) {
-		rmark[i] = 0;
+	//extends rmarker_temp with 0 values
+	for (i = 0; i < max_ver; i++) {
+		rmarker[i] = 0;
 	}
 
-	for (i = vermax; i < max; i++) {
-		rmark[i] = rmarker[i - vermax];
+	for (i = max_ver; i < max_hor; i++) {
+		rmarker[i] = rmarker_temp[i - max_ver];
 	}
 
 	// add values of relational operators to midline
 	y = 0;
-	for (i = xmax; i < max; i++) {
-		if (dizit[i - xmax] == -1) { y -= 1; }
-		mid[i - xmax + y][i] = dizit[i - xmax];
+	for (i = max_x; i < max_hor; i++) {
+		if (mid_operator_val[i - max_x] == -1) { y -= 1; }
+		mid[i - max_x + y][i] = mid_operator_val[i - max_x];
 	}
 
 	// start the loop
 	do {
 		if (integ == true) {
 			// add less precision
-			mid[0][max] = round(mid[0][max] * 10000) / 10000.0;
-			for (i = 0; i < max; i++) {
+			mid[0][max_hor] = round(mid[0][max_hor] * 10000) / 10000.0;
+			for (i = 0; i < max_hor; i++) {
 				mid[0][i] = round(mid[0][i] * 10000) / 10000.0;
-				if (mid[0][i] > mid[0][max]) { valh[i] = 0; mid[0][i] = 0; }
+				if (mid[0][i] > mid[0][max_hor]) { cj_hor_val[i] = 0; mid[0][i] = 0; }
 			}
 		}
-		for (i = 0; i <= vermax; i++) {
-			printer(mid, valv, valh, ver[i], i, max, 1, vermax, zj, fre, free, zway, hor);
+		for (i = 0; i <= max_ver; i++) {
+			printer(mid, cj_ver_val, cj_hor_val, cj_ver_name[i], i, max_hor, 1, max_ver, zj, fre, free, zway, cj_hor_name);
 		}
-		bottom(mid, valv, valh, ver, hor, score, max, zway, zj, cz, vermax, oldZway, rcounter, rmin, rem, integ, intempo,
-			tempdizi, keyh, passint, tempanswer, k);
-		if (rem == true) { remover(mid, hor, ver, valh, valv, max, vermax, rcounter, rem, zj, cz, rmark, tempvalh, xmax); }
+		bottom(mid, cj_ver_val, cj_hor_val, cj_ver_name, cj_hor_name, score, max_hor, zway, zj, cz, max_ver, oldZway, rcounter, rmin, rem, integ, intempo,
+			mid_original, keyh, passint, int_answers, k);
+		if (rem == true) { remover(mid, cj_hor_name, cj_ver_name, cj_hor_val, cj_ver_val, max_hor, max_ver, rcounter, rem, zj, cz, rmarker, cj_hor_val_original, max_x); }
 		while (ent != '\n') { cin >> ent; } ent = 'a';
 	} while (score != true);
 
@@ -385,18 +385,18 @@ int main() {
 	cout << "\nConcluded:\n";
 
 	if (integ == true) {
-		tempanswer[k][0] = keyh;
-		tempanswer[k][1] = mid[0][max];
+		int_answers[k][0] = keyh;
+		int_answers[k][1] = mid[0][max_hor];
 		for (i = 0; i <= k; i++) {
-			cout << "\n" << hor[tempanswer[i][0]] << ": " << tempanswer[i][1];
+			cout << "\n" << cj_hor_name[int_answers[i][0]] << ": " << int_answers[i][1];
 		}
 	}
 	else {
 		if (zway == true) { cout << "Zmax="; }
 		else { cout << "Zmin="; }
-		cout << zj[0][max] << "\n";
-		for (i = 0; i <= vermax; i++) {
-			cout << ver[i] << "=" << mid[i][max] << "\n";
+		cout << zj[0][max_hor] << "\n";
+		for (i = 0; i <= max_ver; i++) {
+			cout << cj_ver_name[i] << "=" << mid[i][max_hor] << "\n";
 		}
 	} cout << "\n";
 
