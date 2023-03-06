@@ -8,14 +8,14 @@
 using namespace std;
 
 void printer(double array[][25], int cj_ver_val[25], int cj_hor_val[25], string cj_ver_name, int x, int max_hor,
-	int func, int max_ver, double array2[][25], double& maxi, int& key_hor, bool zway, string cj_hor_name[25]) {
+	int printer_order, int max_ver, double array2[][25], double& maxi, int& key_hor, bool zway, string cj_hor_name[25]) {
 	int i, p = 2, leftspace, rightspace, j;
 	char spacee = ' ', linee = '-';
 
-	//func: 1 top/mid[x], 2 Zj, 3 Cj-Zj
+	//printer_order: 1 top/mid[x], 2 Zj, 3 Cj-Zj
 
 	//output top
-	if (func == 1 && x == 0) {
+	if (printer_order == 1 && x == 0) {
 		p = 8;
 		cout << string(p, spacee);
 		for (i = 0; i < max_hor; i++) {
@@ -29,32 +29,32 @@ void printer(double array[][25], int cj_ver_val[25], int cj_hor_val[25], string 
 		p = 2;
 	}
 
-	if (func == 1) { if (0 == x) { cout << string(7 + 10 * (max_hor + 1), linee); } cout << "\n" << cj_ver_val[x] << " " << cj_ver_name << "|  "; }
+	if (printer_order == 1) { if (0 == x) { cout << string(7 + 10 * (max_hor + 1), linee); } cout << "\n" << cj_ver_val[x] << " " << cj_ver_name << "|  "; }
 
 	// output mid/bottom
 	for (i = 0; i <= max_hor; i++) {
 		leftspace = 0; rightspace = 4; p = 2;
 
-		if (func == 2) {
+		if (printer_order == 2) {
 			array[0][i] = 0;
 			for (j = 0; j <= max_ver; j++) {
 				array[0][i] += cj_ver_val[j] * array2[j][i];
 			}
 		}
 
-		if (func == 3) {
+		if (printer_order == 3) {
 			array[0][i] = cj_hor_val[i] - array2[0][i];
 		}
 
-		if (i == max_hor && func != 3) { cout << "  | "; }
+		if (i == max_hor && printer_order != 3) { cout << "  | "; }
 		if (array[x][i] >= 0) { leftspace++; }
 		if (array[x][i]<10 && array[x][i]>-10) { leftspace++; }
 		if (ceil(array[x][i]) == array[x][i]) {
-			p = 0; rightspace += 3; cout;
+			p = 0; rightspace += 3;
 		}
 		cout << string(leftspace, spacee) << fixed << setprecision(p) << array[x][i] << string(rightspace, spacee);
 
-		if (func == 3) {
+		if (printer_order == 3) {
 			if (zway == true) {
 				if (array[0][i] > maxi) {
 					maxi = array[0][i];
@@ -69,11 +69,11 @@ void printer(double array[][25], int cj_ver_val[25], int cj_hor_val[25], string 
 			}
 		}
 	}
-	if (func == 1 && max_ver == x) { cout << "\n" << string(7 + 10 * (max_hor + 1), linee); }
+	if (printer_order == 1 && max_ver == x) { cout << "\n" << string(7 + 10 * (max_hor + 1), linee); }
 }
 
 void bottom(double mid[10][25], int cj_ver_val[25], int cj_hor_val[25], string cj_ver_name[25], string cj_hor_name[25], bool& score, int& max_hor, bool& zway,
-	double zj[1][25], double cz[1][25], int max_ver, bool& oldZway, int& rcounter, bool& rmin, bool& rem, bool& integer, double& integer_last_val_current_original,
+	double zj[1][25], double cz[1][25], int max_ver, bool& zway_original, int& rcounter, bool& rmin, bool& rem, bool& integer, double& integer_last_val_current_original,
 	double mid_original[25], int& key_hor, bool& integer_pass, int integer_answers[10][25], int& k) {
 	int i, key_ver = 0, j, lcount = 0, integer_last_val_int = 0;
 	double maxi = 0, multiply, key = 0, temp = 0, tempo = 0, integer_last_val_rest = 0;
@@ -112,7 +112,7 @@ void bottom(double mid[10][25], int cj_ver_val[25], int cj_hor_val[25], string c
 				cj_ver_name[0] = cj_hor_name[max_hor - 1];
 			}goto end;
 		}
-	sc:score = true; if (rmin == true) { rmin = false; score = false; rem = true; if (oldZway == true) { zway = true; } }
+	sc:score = true; if (rmin == true) { rmin = false; score = false; rem = true; if (zway_original == true) { zway = true; } }
 		goto end;
 	}
 	maxi = 0;
@@ -191,7 +191,7 @@ int main() {
 	double cz[1][25] = {};			//Cj-Zj line	
 	int rmarker_temp[25] = {};		//mark R columns
 	int rmarker[25] = {};			//extended version of rmarker with zeroes
-	int integer_answers[10][25] = {};		//for recording integer method answers
+	int integer_answers[10][25] = {};	//for recording integer method answers
 
 	int i = 0, j = 0, y = 0, d = 0, xassigner = 0, xcounter = 0, max_hor = 0, hori = 0, ct = 0, max_ver = 0, key_hor = 0,
 		z = 0, rcounter = 0, scount = 1, rcount = 1, max_x = 0, a = 0, b = 0, k = 0, free = 0;
@@ -199,9 +199,9 @@ int main() {
 	string convert = "", stemp, tempS;
 	char spacee = ' '; char ent = 'a';
 
-	bool zway = false, rmin = false, oldZway = false, rem = false, score = false, db = true, integer = false, integer_pass = false;
-	// zway= if zmax or zmin | rmin= if rmin or normal method | oldZway= if zway was max before turning min because of rmin |
-	// rem= if should start remover function | score= if loop has ended | integer= for integer values | integer_pass= new loop with integer type
+	bool zway = false, rmin = false, zway_original = false, rem = false, score = false, db = true, integer = false, integer_pass = false;
+	// zway= Zmax/Zmin | rmin= Rmin/Normal method | zway_original= if zway was max before turning min because of Rmin |
+	// rem= enable remover function | score= loop ended | integer= Integer/Normal method | integer_pass= new loop with integer type
 
 	cout << "\n Enter the equations. Examples: \n\n 	Zmin=6x1+1x2 6x1+2x2=5 8x1+6x2>12 2x1+4x2<8 \n\n 	Zmax=6x1+8x2 30x1+20x2<300 5x1+10x2<110";
 	cout << "\n\n 	Zmax=8x1+60x2+15x3+2x4+20x5+100x6+80x7+200x8+6x9 0.2x1+1.2x2+0.8x3+0.1x4+2x5+3.5x6+1.5x7+4x8+2x9<20 -t \n\n";
@@ -299,7 +299,7 @@ int main() {
 
 	// check if zmax or zmin
 	if (strstr(input, "a") || strstr(input, "A")) {
-		zway = true; oldZway = true; if (rmin == true) { zway = false; }
+		zway = true; zway_original = true; if (rmin == true) { zway = false; }
 	}
 	else if (strstr(input, "i") || strstr(input, "I")) {
 		zway = false;
@@ -375,7 +375,7 @@ int main() {
 		for (i = 0; i <= max_ver; i++) {
 			printer(mid, cj_ver_val, cj_hor_val, cj_ver_name[i], i, max_hor, 1, max_ver, zj, fre, free, zway, cj_hor_name);
 		}
-		bottom(mid, cj_ver_val, cj_hor_val, cj_ver_name, cj_hor_name, score, max_hor, zway, zj, cz, max_ver, oldZway, 
+		bottom(mid, cj_ver_val, cj_hor_val, cj_ver_name, cj_hor_name, score, max_hor, zway, zj, cz, max_ver, zway_original, 
 			rcounter, rmin, rem, integer, integer_last_val_current_original, mid_original, key_hor, integer_pass, integer_answers, k);
 		if (rem == true) { remover(mid, cj_hor_name, cj_ver_name, cj_hor_val, cj_ver_val, max_hor, max_ver, rcounter, rem, zj, cz,
 			rmarker, cj_hor_val_original, max_x); }
@@ -404,3 +404,9 @@ int main() {
 	while (ent != '\n') { cin >> ent; }
 	return 0;
 }
+
+/*
+	Notes:
+space formation supports only 1-2 digit values
+integer type supports only 1st row
+*/
