@@ -8,11 +8,11 @@
 using namespace std;
 
 void printer(double array[][25], int cj_ver_val[25], int cj_hor_val[25], string cj_ver_name, int x, int max_hor,
-	int func, int max_ver, double array2[][25], double& maxi, int& keyh, bool zway, string cj_hor_name[25]) {
+	int func, int max_ver, double array2[][25], double& maxi, int& key_hor, bool zway, string cj_hor_name[25]) {
 	int i, p = 2, leftspace, rightspace, j;
 	char spacee = ' ', linee = '-';
 
-	//func: 1 top/mid[i], 2 Zj, 3 Cj-Zj
+	//func: 1 top/mid[x], 2 Zj, 3 Cj-Zj
 
 	//output top
 	if (func == 1 && x == 0) {
@@ -58,13 +58,13 @@ void printer(double array[][25], int cj_ver_val[25], int cj_hor_val[25], string 
 			if (zway == true) {
 				if (array[0][i] > maxi) {
 					maxi = array[0][i];
-					keyh = i;
+					key_hor = i;
 				}
 			}
 			else {
 				if (array[0][i] < maxi) {
 					maxi = array[0][i];
-					keyh = i;
+					key_hor = i;
 				}
 			}
 		}
@@ -73,41 +73,41 @@ void printer(double array[][25], int cj_ver_val[25], int cj_hor_val[25], string 
 }
 
 void bottom(double mid[10][25], int cj_ver_val[25], int cj_hor_val[25], string cj_ver_name[25], string cj_hor_name[25], bool& score, int& max_hor, bool& zway,
-	double zj[1][25], double cz[1][25], int max_ver, bool& oldZway, int& rcounter, bool& rmin, bool& rem, bool& integ, double& intempo,
-	double mid_original[25], int& keyh, bool& passint, int int_answers[10][25], int& k) {
-	int i, keyv = 0, j, lcount = 0, temp_int_max = 0;
-	double maxi = 0, multiply, key = 0, temp = 0, tempo = 0, intempor = 0;
+	double zj[1][25], double cz[1][25], int max_ver, bool& oldZway, int& rcounter, bool& rmin, bool& rem, bool& integer, double& integer_last_val_current_original,
+	double mid_original[25], int& key_hor, bool& integer_pass, int integer_answers[10][25], int& k) {
+	int i, key_ver = 0, j, lcount = 0, integer_last_val_int = 0;
+	double maxi = 0, multiply, key = 0, temp = 0, tempo = 0, integer_last_val_rest = 0;
 
 	// output Zj
 	cout << "\n  Zj|  ";
-	printer(zj, cj_ver_val, cj_hor_val, cj_ver_name[0], 0, max_hor, 2, max_ver, mid, maxi, keyh, zway, cj_hor_name);
+	printer(zj, cj_ver_val, cj_hor_val, cj_ver_name[0], 0, max_hor, 2, max_ver, mid, maxi, key_hor, zway, cj_hor_name);
 	// output Cj-Zj
 	cout << "\nC-Zj|  ";
-	printer(cz, cj_ver_val, cj_hor_val, cj_ver_name[0], 0, max_hor - 1, 3, max_ver, zj, maxi, keyh, zway, cj_hor_name);
+	printer(cz, cj_ver_val, cj_hor_val, cj_ver_name[0], 0, max_hor - 1, 3, max_ver, zj, maxi, key_hor, zway, cj_hor_name);
 
 	//checks if loop should stop or continue with new sequence
 	if (maxi == 0) {
 		//turn to integer
-		if (integ == true) {
-			temp_int_max = mid[0][max_hor];
-			if (mid[0][max_hor] == temp_int_max && passint == true) { goto sc; }
-			mid[0][max_hor] = temp_int_max; intempor = mid_original[keyh] * temp_int_max;
-			if (passint == true) { passint = false; goto end; }
+		if (integer == true) {
+			integer_last_val_int = mid[0][max_hor];
+			if (mid[0][max_hor] == integer_last_val_int && integer_pass == false) { goto sc; }
+			mid[0][max_hor] = integer_last_val_int; integer_last_val_rest = mid_original[key_hor] * integer_last_val_int;
+			if (integer_pass == false) { integer_pass = true; goto end; }
 
-			if (intempo != intempor) {
-				int_answers[k][0] = keyh;
-				int_answers[k][1] = mid[0][max_hor];
-				cout << "\n\n 	" << cj_hor_name[keyh] << ": " << int_answers[k][1] << " New Sequence..\n";
+			if (integer_last_val_current_original != integer_last_val_rest) {
+				integer_answers[k][0] = key_hor;
+				integer_answers[k][1] = mid[0][max_hor];
+				cout << "\n\n 	" << cj_hor_name[key_hor] << ": " << integer_answers[k][1] << " New Sequence..\n";
 				k++;
-				passint = true;
+				integer_pass = false;
 				for (i = 0; i < max_hor; i++) {
 					while (mid[0][i] == 0) { i++; }
 					mid[0][i] = mid_original[i];
 				}
-				mid[0][max_hor] = intempo - intempor;
-				intempo = mid[0][max_hor];
-				cj_hor_val[keyh] = 0;
-				mid[0][keyh] = 0;
+				mid[0][max_hor] = integer_last_val_current_original - integer_last_val_rest;
+				integer_last_val_current_original = mid[0][max_hor];
+				cj_hor_val[key_hor] = 0;
+				mid[0][key_hor] = 0;
 				cj_ver_val[0] = 0;
 				cj_ver_name[0] = cj_hor_name[max_hor - 1];
 			}goto end;
@@ -117,31 +117,31 @@ void bottom(double mid[10][25], int cj_ver_val[25], int cj_hor_val[25], string c
 	}
 	maxi = 0;
 
-	// finds keyv
+	// finds key_ver
 	for (i = 0; i <= max_ver; i++) {
-		while (mid[i][keyh] <= 0) { if (i == max_ver + 1) { goto skip; }i++; }
-		temp = mid[i][max_hor] / mid[i][keyh];
+		while (mid[i][key_hor] <= 0) { if (i == max_ver + 1) { goto skip; }i++; }
+		temp = mid[i][max_hor] / mid[i][key_hor];
 		if (i == 0) { tempo = temp; }
-		if (tempo > temp) { keyv = i; tempo = temp; }
+		if (tempo > temp) { key_ver = i; tempo = temp; }
 	}
 
 skip:
-	// calculates keyv line
-	key = mid[keyv][keyh];
+	// calculates key_ver line
+	key = mid[key_ver][key_hor];
 	for (i = 0; i <= max_hor; i++) {
-		mid[keyv][i] = mid[keyv][i] / key;
+		mid[key_ver][i] = mid[key_ver][i] / key;
 	}
 	// calculates other lines
 	for (i = 0; i <= max_ver; i++) {
-		if (i == keyv) { i++; }
-		multiply = mid[i][keyh];
+		if (i == key_ver) { i++; }
+		multiply = mid[i][key_hor];
 		for (j = 0; j <= max_hor; j++) {
-			mid[i][j] = mid[i][j] - multiply * mid[keyv][j];
+			mid[i][j] = mid[i][j] - multiply * mid[key_ver][j];
 		}
 	}
 	// set new cj_ver_name
-	cj_ver_val[keyv] = cj_hor_val[keyh];
-	cj_ver_name[keyv] = cj_hor_name[keyh];
+	cj_ver_val[key_ver] = cj_hor_val[key_hor];
+	cj_ver_name[key_ver] = cj_hor_name[key_hor];
 end:cout << "\n\n\n";
 }
 
@@ -191,17 +191,17 @@ int main() {
 	double cz[1][25] = {};			//Cj-Zj line	
 	int rmarker_temp[25] = {};		//mark R columns
 	int rmarker[25] = {};			//extended version of rmarker with zeroes
-	int int_answers[10][25] = {};		//for recording integer method answers
+	int integer_answers[10][25] = {};		//for recording integer method answers
 
-	int i = 0, j = 0, y = 0, d = 0, xassigner = 0, xcounter = 0, max_hor = 0, hori = 0, ct = 0, max_ver = 0, keyh = 0,
+	int i = 0, j = 0, y = 0, d = 0, xassigner = 0, xcounter = 0, max_hor = 0, hori = 0, ct = 0, max_ver = 0, key_hor = 0,
 		z = 0, rcounter = 0, scount = 1, rcount = 1, max_x = 0, a = 0, b = 0, k = 0, free = 0;
-	double fre = 0, intempo = 0;
+	double fre = 0, integer_last_val_current_original = 0;
 	string convert = "", stemp, tempS;
 	char spacee = ' '; char ent = 'a';
 
-	bool zway = false, rmin = false, oldZway = false, rem = false, score = false, db = true, integ = false, passint = true;
+	bool zway = false, rmin = false, oldZway = false, rem = false, score = false, db = true, integer = false, integer_pass = false;
 	// zway= if zmax or zmin | rmin= if rmin or normal method | oldZway= if zway was max before turning min because of rmin |
-	// rem= if should start remover function | score= if loop has ended | integ= for integer values | passint= new loop with integer type
+	// rem= if should start remover function | score= if loop has ended | integer= for integer values | integer_pass= new loop with integer type
 
 	cout << "\n Enter the equations. Examples: \n\n 	Zmin=6x1+1x2 6x1+2x2=5 8x1+6x2>12 2x1+4x2<8 \n\n 	Zmax=6x1+8x2 30x1+20x2<300 5x1+10x2<110";
 	cout << "\n\n 	Zmax=8x1+60x2+15x3+2x4+20x5+100x6+80x7+200x8+6x9 0.2x1+1.2x2+0.8x3+0.1x4+2x5+3.5x6+1.5x7+4x8+2x9<20 -t \n\n";
@@ -212,7 +212,7 @@ int main() {
 
 		cin >> noskipws >> input[i];
 
-		if (input[i - a] == 't' || input[i - a] == 'T') { integ = true; }
+		if (input[i - a] == 't' || input[i - a] == 'T') { integer = true; }
 		if ((input[i - a] == 'x' || input[i - a] == 'X') && isdigit(input[i])) {
 
 			// find numbers after x
@@ -295,7 +295,7 @@ int main() {
 		mid[i][max_hor] = stod(tempS);
 	}
 
-	intempo = mid[0][max_hor];
+	integer_last_val_current_original = mid[0][max_hor];
 
 	// check if zmax or zmin
 	if (strstr(input, "a") || strstr(input, "A")) {
@@ -364,7 +364,7 @@ int main() {
 
 	// start the loop
 	do {
-		if (integ == true) {
+		if (integer == true) {
 			// add less precision
 			mid[0][max_hor] = round(mid[0][max_hor] * 10000) / 10000.0;
 			for (i = 0; i < max_hor; i++) {
@@ -375,20 +375,21 @@ int main() {
 		for (i = 0; i <= max_ver; i++) {
 			printer(mid, cj_ver_val, cj_hor_val, cj_ver_name[i], i, max_hor, 1, max_ver, zj, fre, free, zway, cj_hor_name);
 		}
-		bottom(mid, cj_ver_val, cj_hor_val, cj_ver_name, cj_hor_name, score, max_hor, zway, zj, cz, max_ver, oldZway, rcounter, rmin, rem, integ, intempo,
-			mid_original, keyh, passint, int_answers, k);
-		if (rem == true) { remover(mid, cj_hor_name, cj_ver_name, cj_hor_val, cj_ver_val, max_hor, max_ver, rcounter, rem, zj, cz, rmarker, cj_hor_val_original, max_x); }
+		bottom(mid, cj_ver_val, cj_hor_val, cj_ver_name, cj_hor_name, score, max_hor, zway, zj, cz, max_ver, oldZway, 
+			rcounter, rmin, rem, integer, integer_last_val_current_original, mid_original, key_hor, integer_pass, integer_answers, k);
+		if (rem == true) { remover(mid, cj_hor_name, cj_ver_name, cj_hor_val, cj_ver_val, max_hor, max_ver, rcounter, rem, zj, cz,
+			rmarker, cj_hor_val_original, max_x); }
 		while (ent != '\n') { cin >> ent; } ent = 'a';
 	} while (score != true);
 
 	// output the answers
 	cout << "\nConcluded:\n";
 
-	if (integ == true) {
-		int_answers[k][0] = keyh;
-		int_answers[k][1] = mid[0][max_hor];
+	if (integer == true) {
+		integer_answers[k][0] = key_hor;
+		integer_answers[k][1] = mid[0][max_hor];
 		for (i = 0; i <= k; i++) {
-			cout << "\n" << cj_hor_name[int_answers[i][0]] << ": " << int_answers[i][1];
+			cout << "\n" << cj_hor_name[integer_answers[i][0]] << ": " << integer_answers[i][1];
 		}
 	}
 	else {
