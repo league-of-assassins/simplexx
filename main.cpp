@@ -206,13 +206,13 @@ int main() {
 	int rmarker[25] = {};			//extended version of rmarker with zeroes
 	int integer_answer[10][25] = {};	//for recording integer method answers
 
-	int i = 0, j = 0, y = 0, d = 0, xassigner = 0, xcounter = 0, max_hor = 0, hori = 0, ct = 0, max_ver = 0, key_hor = 0,
+	int i = 0, j = 0, y = 0, equation_count = 0, xassigner = 0, xcounter = 0, max_hor = 0, hori = 0, ct = 0, max_ver = 0, key_hor = 0,
 		z = 0, rcounter = 0, scount = 1, rcount = 1, max_x = 0, a = 0, b = 0, k = 0, occupier = 0;
 	double fre = 0, integer_last_val_current_original = 0;
 	string convert = "", stemp, tempS;
 	char ent = 'a';
 
-	bool zway = false, rmin_method = false, zway_original = false, remover_enable = false, score = false, db = true, integer_method = false, integer_pass = false;
+	bool zway = false, rmin_method = false, zway_original = false, remover_enable = false, score = false, first = true, integer_method = false, integer_pass = false;
 	// zway= Zmax/Zmin | rmin_method= Rmin_method/Normal method | zway_original= if zway was max before turning min because of Rmin_method |
 	// remover_enable= enable remover function | score= loop ended | integer_method= Integer/Normal method | integer_pass= new loop with integer type
 
@@ -235,8 +235,8 @@ int main() {
 
 			// set array 0 if x skipped
 			while (xcounter != xassigner) {
-				if (d == 0 && db == true) { cj_hor_val[0][xcounter] = 0; }
-				else { mid[d][xcounter] = 0; }
+				if (equation_count == 0 && first == true) { cj_hor_val[0][xcounter] = 0; }
+				else { mid[equation_count][xcounter] = 0; }
 				xcounter++;
 			}
 
@@ -248,13 +248,13 @@ int main() {
 			}
 
 			// create array with numbers before x
-			if (d == 0 && db == true) {
+			if (equation_count == 0 && first == true) {
 				cj_hor_val[0][xassigner] = stod(convert);
 				if (input[i - j - 1] == '-') { cj_hor_val[0][xassigner] = 0 - cj_hor_val[0][xassigner]; }
 			}
 			else {
-				mid[d][xassigner] = stod(convert);
-				if (input[i - j - 1] == '-') { mid[d][xassigner] = 0 - mid[d][xassigner]; }
+				mid[equation_count][xassigner] = stod(convert);
+				if (input[i - j - 1] == '-') { mid[equation_count][xassigner] = 0 - mid[equation_count][xassigner]; }
 			}
 			convert = "";
 
@@ -285,12 +285,12 @@ int main() {
 			mid_last_val_marker[ct] = i; ct++;	hori++;
 		}
 		//space moves to next line
-		if (isspace(input[i - a]) && isdigit(input[i - b]) && isdigit(input[i])) { xcounter = 0; d++; if (d == 1 && db == true) { d--; db = false; } }
+		if (isspace(input[i - a]) && isdigit(input[i - b]) && isdigit(input[i])) { xcounter = 0; equation_count++; if (equation_count == 1 && first == true) { equation_count--; first = false; } }
 		if (i == 2) { a++; b += 2; }
 		i++;
 	}
 
-	max_ver = d; max_x += 1; max_hor = max_x; max_hor += hori;
+	max_ver = equation_count; max_x += 1; max_hor = max_x; max_hor += hori;
 
 	//store mid
 	for (i = 0; i <= max_hor; i++) {
@@ -426,6 +426,6 @@ int main() {
 
 /*
 	Notes:
-space formation supports up to -+99.999
+space formation supports up to -+99999.99
 integer type supports only 1st row
 */
