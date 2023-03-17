@@ -85,7 +85,7 @@ void printer(double array[][25], int cj_ver_val[25], double cj_hor_val[1][25], s
 
 void bottom(double mid[10][25], string cj_hor_name[25], string cj_ver_name[25], double cj_hor_val[1][25], int cj_ver_val[25],
 	double zj[1][25], double cz[1][25], int& max_hor, int max_ver, int& key_hor, bool& zway, bool& zway_original, bool& score, bool& rmin_method,
-	bool& remover_enable, int& rcounter, bool& integer_method, bool& integer_pass, double& integer_last_val_current_original,
+	bool& remover_enable, int& count_r, bool& integer_method, bool& integer_pass, double& integer_last_val_current_original,
 	double mid_original[25], int integer_answer[10][25], int& k)
 {
 	int i, key_ver = 0, j, lcount = 0, integer_last_val_int = 0;
@@ -144,6 +144,7 @@ skip:
 	for (i = 0; i <= max_hor; i++) {
 		mid[key_ver][i] = mid[key_ver][i] / key;
 	}
+	
 	// calculates other lines
 	for (i = 0; i <= max_ver; i++) {
 		if (i == key_ver) { i++; }
@@ -152,21 +153,24 @@ skip:
 			mid[i][j] = mid[i][j] - multiply * mid[key_ver][j];
 		}
 	}
-	// set new cj_ver_name
+
+	// set new cj_ver
 	cj_ver_val[key_ver] = cj_hor_val[0][key_hor];
 	cj_ver_name[key_ver] = cj_hor_name[key_hor];
 end:cout << "\n\n\n";
 }
 
 void remover(double mid[10][25], string cj_hor_name[25], string cj_ver_name[25], double cj_hor_val[1][25], int cj_ver_val[25],
-	int& max_hor, int max_ver, int rcounter, bool& remover_enable, double zj[1][25], double cz[1][25], int rmarker[25], double cj_hor_val_original[25], int max_x) {
-	int i, j, u, y = 0;
+	int& max_hor, int max_ver, int count_r, bool& remover_enable, double zj[1][25], double cz[1][25], int rmarker[25], double cj_hor_val_original[25], int max_x) {
+	int i, j, u;
 	bool start = false;
 	remover_enable = false;
+
 	// copy old cj_hor_val to current
 	for (i = 0; i <= max_hor; i++) {
 		cj_hor_val[0][i] = cj_hor_val_original[i];
 	}
+
 	//remove R columns from array
 	u = max_x;
 	for (i = 0; i <= max_hor; i++) {
@@ -179,13 +183,14 @@ void remover(double mid[10][25], string cj_hor_name[25], string cj_ver_name[25],
 			u++;
 		}
 	}
+
 	//copy cj_hor_val to cj_ver_val
 	for (i = 0; i <= max_ver + 1; i++) {
 		for (j = 0; j <= max_hor; j++) {
 			if (cj_ver_name[i] == cj_hor_name[j]) { cj_ver_val[i] = cj_hor_val[0][j]; }
 		}
 	}
-	max_hor -= rcounter;
+	max_hor -= count_r;
 }
 
 int main() {
@@ -206,10 +211,10 @@ int main() {
 	int rmarker[25] = {};			//extended version of rmarker with zeroes
 	int integer_answer[10][25] = {};	//for recording integer method answers
 
-	int i = 0, j = 0, y = 0, count_equation = 0, xassigner = 0, xcounter = 0, max_hor = 0, hori = 0, ct = 0, max_ver = 0, key_hor = 0,
-		z = 0, rcounter = 0, scount = 1, rcount = 1, max_x = 0, a = 0, b = 0, k = 0, occupier = 0;
-	double fre = 0, integer_last_val_current_original = 0;
-	string convert = "", stemp, tempS;
+	int i = 0, j = 0, y = 0, count_equation = 0, assign_x = 0, count_x = 0, max_hor = 0, count_cj = 0, mark_last = 0, max_ver = 0, key_hor = 0,
+		count_r = 0, count_s = 1, max_x = 0, a = 0, b = 0, k = 0, occupier = 0;
+	double occupier_2 = 0, integer_last_val_current_original = 0;
+	string temp_string;
 	char ent = 'a';
 
 	bool zway = false, rmin_method = false, zway_original = false, remover_enable = false, score = false, first_equation = true, integer_method = false, integer_pass = false;
@@ -225,89 +230,89 @@ int main() {
 
 		cin >> noskipws >> input[i];
 
-		if (input[i - a] == 't' || input[i - a] == 'T') { integer_method = true; }
+		if (input[i-a-1] == '-' && (input[i - a] == 't' || input[i - a] == 'T')) { integer_method = true; count_equation--; }
 		if ((input[i - a] == 'x' || input[i - a] == 'X') && isdigit(input[i])) {
 
 			// find numbers after x
-			stemp = "";
-			stemp = stemp + input[i];
-			xassigner = stod(stemp) - 1;
+			temp_string = "";
+			temp_string = temp_string + input[i];
+			assign_x = stod(temp_string) - 1;
 
 			// set array 0 if x skipped
-			while (xcounter != xassigner) {
-				if (count_equation == 0 && first_equation == true) { cj_hor_val[0][xcounter] = 0; }
-				else { mid[count_equation][xcounter] = 0; }
-				xcounter++;
+			while (count_x != assign_x) {
+				if (count_equation == 0 && first_equation == true) { cj_hor_val[0][count_x] = 0; }
+				else { mid[count_equation][count_x] = 0; }
+				count_x++;
 			}
 
 			// find numbers before x
-			j = 2;
+			j = 2; temp_string = "";
 			while (isdigit(input[i - j]) || input[i - j] == '.') {
-				convert = input[i - j] + convert;
+				temp_string = input[i - j] + temp_string;
 				j++;
 			}
 
 			// create array with numbers before x
 			if (count_equation == 0 && first_equation == true) {
-				cj_hor_val[0][xassigner] = stod(convert);
-				if (input[i - j] == '-') { cj_hor_val[0][xassigner] = 0 - cj_hor_val[0][xassigner]; }
+				cj_hor_val[0][assign_x] = stod(temp_string);
+				if (input[i - j] == '-') { cj_hor_val[0][assign_x] = 0 - cj_hor_val[0][assign_x]; }
 			}
 			else {
-				mid[count_equation][xassigner] = stod(convert);
-				if (input[i - j] == '-') { mid[count_equation][xassigner] = 0 - mid[count_equation][xassigner]; }
+				mid[count_equation][assign_x] = stod(temp_string);
+				if (input[i - j] == '-') { mid[count_equation][assign_x] = 0 - mid[count_equation][assign_x]; }
 			}
-			convert = "";
 
 			//find max x
-			if (max_x < xassigner) { max_x = xassigner; }
-			xcounter++;
+			if (max_x < assign_x) { max_x = assign_x; }
+			count_x++;
 		}
 
 		//check relational operators
 		if (input[i - a] == '<' || input[i - a] == '>' || input[i - a] == '=' && isdigit(input[i - b])) {
-			mid_operator_val[hori] = 1;
+			mid_operator_val[count_cj] = 1;
 			switch (input[i - a]) {
 
 			case '<':
-				tempS = to_string(scount); scount++; cj_hor_name_temp[hori] = "S" + tempS;
+				temp_string = to_string(count_s); count_s++; cj_hor_name_temp[count_cj] = "S" + temp_string;
 				break;
 
 			case '>':
-				tempS = to_string(rcount); rcount++; cj_hor_name_temp[hori] = "R" + tempS; rmin_method = true; rmarker_temp[hori] = 1; rcounter++;
-				hori++; cj_hor_name_temp[hori] = "V" + tempS; mid_operator_val[hori] = -1;
+				count_r++; temp_string = to_string(count_r); cj_hor_name_temp[count_cj] = "R" + temp_string; rmin_method = true; rmarker_temp[count_cj] = 1;
+				count_cj++; cj_hor_name_temp[count_cj] = "V" + temp_string; mid_operator_val[count_cj] = -1;
 				break;
 
-			case '=':
-				tempS = to_string(rcount); rcount++; cj_hor_name_temp[hori] = "R" + tempS; rmin_method = true; rmarker_temp[hori] = 1; rcounter++;
+			case '=': 
+				 count_r++; temp_string = to_string(count_r); cj_hor_name_temp[count_cj] = "R" + temp_string; rmin_method = true; rmarker_temp[count_cj] = 1;
 				break;
 			}
 			// mark the places of mid_last_val
-			mid_last_val_marker[ct] = i; ct++;	hori++;
+			mid_last_val_marker[mark_last] = i; mark_last++; count_cj++;
 		}
 		//space moves to next line
-		if (isspace(input[i - a]) && isdigit(input[i - b]) && isdigit(input[i])) { 
-			xcounter = 0; count_equation++; if (count_equation == 1 && first_equation == true) { count_equation--; first_equation = false; } 
+		if (isspace(input[i - a]) && isdigit(input[i - b]) && (isdigit(input[i]) || input[i] == '-')) { 
+			count_x = 0; count_equation++; if (count_equation == 1 && first_equation == true) { count_equation--; first_equation = false; } 
 		}
 		if (i == 2) { a++; b += 2; }
 		i++;
 	}
 
-	max_ver = count_equation; max_x += 1; max_hor = max_x; max_hor += hori;
+	max_ver = count_equation; max_x += 1; max_hor = max_x; max_hor += count_cj;
 
 	//store mid
 	for (i = 0; i <= max_hor; i++) {
 		mid_original[i] = mid[0][i];
 	}
+
 	// find mid_last_val which was marked above
 	j = 0;
-	for (i = 0; i < ct; i++) {
-		tempS = "";
+	for (i = 0; i < mark_last; i++) {
+		temp_string = "";
 		y = 0;
 		while (isdigit(input[mid_last_val_marker[i] + y]) || input[mid_last_val_marker[i] + y] == '.') {
-			tempS = tempS + input[mid_last_val_marker[i] + y];
+			temp_string = temp_string + input[mid_last_val_marker[i] + y];
 			y++;
 		}
-		mid[i][max_hor] = stod(tempS);
+		mid[i][max_hor] = stod(temp_string);
 	}
 
 	integer_last_val_current_original = mid[0][max_hor];
@@ -321,12 +326,12 @@ int main() {
 	}
 
 	// set cj_hor_name
-	tempS = "";
+	temp_string = "";
 	for (i = 0; i < max_x; i++) {
-		tempS = to_string(i + 1);
-		cj_hor_name[i] = "X" + tempS;
+		temp_string = to_string(i + 1);
+		cj_hor_name[i] = "X" + temp_string;
 	}
-	for (i = max_x; i <= max_x + hori; i++) {
+	for (i = max_x; i <= max_x + count_cj; i++) {
 		cj_hor_name[i] = cj_hor_name_temp[i - max_x];
 	}
 
@@ -340,7 +345,7 @@ int main() {
 
 	//store cj_hor_val
 	if (rmin_method == true) {
-		for (i = 0; i <= max_x + hori; i++) {
+		for (i = 0; i <= max_x + count_cj; i++) {
 			cj_hor_val_original[i] = cj_hor_val[0][i];
 		}
 	}
@@ -370,7 +375,7 @@ int main() {
 		rmarker[i] = rmarker_temp[i - max_ver];
 	}
 
-	// add values of relational operators to midline
+	// add values of relational operators to mid
 	y = 0;
 	for (i = max_x; i < max_hor; i++) {
 		if (mid_operator_val[i - max_x] == -1) { y -= 1; }
@@ -379,25 +384,27 @@ int main() {
 
 	// start the loop
 	do {
+		for (i = 0; i <= max_hor; i++) {
+			mid[0][i] = round(mid[0][i] * 10000) / 10000.0;
+		}
+
 		if (integer_method == true) {
-			// add less precision
-			mid[0][max_hor] = round(mid[0][max_hor] * 10000) / 10000.0;
+			// remove unfit values
 			for (i = 0; i < max_hor; i++) {
-				mid[0][i] = round(mid[0][i] * 10000) / 10000.0;
 				if (mid[0][i] > mid[0][max_hor]) { cj_hor_val[0][i] = 0; mid[0][i] = 0; }
 			}
 		}
 
-		printer(cj_hor_val, cj_ver_val, mid, cj_ver_name[i], 0, max_hor, 0, max_ver, zj, fre, occupier, zway, cj_hor_name);
+		printer(cj_hor_val, cj_ver_val, mid, cj_ver_name[i], 0, max_hor, 0, max_ver, zj, occupier_2, occupier, zway, cj_hor_name);
 
 		for (i = 0; i <= max_ver; i++) {
-			printer(mid, cj_ver_val, cj_hor_val, cj_ver_name[i], i, max_hor, 1, max_ver, zj, fre, occupier, zway, cj_hor_name);
+			printer(mid, cj_ver_val, cj_hor_val, cj_ver_name[i], i, max_hor, 1, max_ver, zj, occupier_2, occupier, zway, cj_hor_name);
 		}
 
 		bottom(mid, cj_hor_name, cj_ver_name, cj_hor_val, cj_ver_val, zj, cz, max_hor, max_ver, key_hor, zway, zway_original, score,
-			rmin_method, remover_enable, rcounter, integer_method, integer_pass, integer_last_val_current_original, mid_original, integer_answer, k );
+			rmin_method, remover_enable, count_r, integer_method, integer_pass, integer_last_val_current_original, mid_original, integer_answer, k );
 
-		if (remover_enable == true) { remover(mid, cj_hor_name, cj_ver_name, cj_hor_val, cj_ver_val, max_hor, max_ver, rcounter, remover_enable, zj, cz,
+		if (remover_enable == true) { remover(mid, cj_hor_name, cj_ver_name, cj_hor_val, cj_ver_val, max_hor, max_ver, count_r, remover_enable, zj, cz,
 			rmarker, cj_hor_val_original, max_x); }
 
 		while (ent != '\n') { cin >> ent; } ent = 'a';
@@ -430,4 +437,6 @@ int main() {
 	Notes:
 space formation supports up to -+99999.99
 integer type supports only 1st row
+input order is important. entering characters in an order other than shown in the example might break the program
+Correct way: zmax/zmin=equation | other equations | options
 */
