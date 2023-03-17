@@ -144,7 +144,7 @@ skip:
 	for (i = 0; i <= max_hor; i++) {
 		mid[key_ver][i] = mid[key_ver][i] / key;
 	}
-	
+
 	// calculates other lines
 	for (i = 0; i <= max_ver; i++) {
 		if (i == key_ver) { i++; }
@@ -285,7 +285,7 @@ int main() {
 				 count_r++; temp_string = to_string(count_r); cj_hor_name_temp[count_cj] = "R" + temp_string; rmin_method = true; rmarker_temp[count_cj] = 1;
 				break;
 			}
-			// mark the places of mid_last_val
+			// mark mid_last_val
 			mid_last_val_marker[mark_last] = i; mark_last++; count_cj++;
 		}
 		//space moves to next line
@@ -298,31 +298,32 @@ int main() {
 
 	max_ver = count_equation; max_x += 1; max_hor = max_x; max_hor += count_cj;
 
-	//store mid
-	for (i = 0; i <= max_hor; i++) {
-		mid_original[i] = mid[0][i];
-	}
-
-	// find mid_last_val which was marked above
-	j = 0;
-	for (i = 0; i < mark_last; i++) {
-		temp_string = "";
-		y = 0;
-		while (isdigit(input[mid_last_val_marker[i] + y]) || input[mid_last_val_marker[i] + y] == '.') {
-			temp_string = temp_string + input[mid_last_val_marker[i] + y];
-			y++;
-		}
-		mid[i][max_hor] = stod(temp_string);
-	}
-
-	integer_last_val_current_original = mid[0][max_hor];
-
 	// check if zmax or zmin
 	if (strstr(input, "a") || strstr(input, "A")) {
 		zway = true; zway_original = true; if (rmin_method == true) { zway = false; }
 	}
 	else if (strstr(input, "i") || strstr(input, "I")) {
 		zway = false;
+	}
+	else {
+		cout << "\n    Z was not entered. Aborting...";
+		return 0;
+	}
+
+	// find marked mid_last_val
+	for (i = 0; i < mark_last; i++) {
+		temp_string = ""; y = 0;
+		while (isdigit(input[mid_last_val_marker[i] + y]) || input[mid_last_val_marker[i] + y] == '.') {
+			temp_string = temp_string + input[mid_last_val_marker[i] + y];
+			y++;
+		}
+		mid[i][max_hor] = stod(temp_string);
+	}
+	integer_last_val_current_original = mid[0][max_hor];
+
+	//store mid
+	for (i = 0; i <= max_hor; i++) {
+		mid_original[i] = mid[0][i];
 	}
 
 	// set cj_hor_name
@@ -340,25 +341,16 @@ int main() {
 	for (i = 0; i <= max_ver + 1; i++) {
 		if (mid_operator_val[i + y] == -1) { y++; }
 		cj_ver_name[i] = cj_hor_name[i + max_x + y];
-		cj_ver_val[i] = 0;
 	}
 
-	//store cj_hor_val
 	if (rmin_method == true) {
-		for (i = 0; i <= max_x + count_cj; i++) {
+		//store and clear cj_hor_val
+		for (i = 0; i <= max_x; i++) {
 			cj_hor_val_original[i] = cj_hor_val[0][i];
+			cj_hor_val[0][i] = 0;
 		}
-	}
 
-	//set rest of cj_hor_val 0
-	y = 0;
-	if (rmin_method == true) { y = max_x; }
-	for (i = max_x - y; i <= max_x; i++) {
-		cj_hor_val[0][i] = 0;
-	}
-
-	//set cj_hor_val and cj_ver_val of rmin_method
-	if (rmin_method == true) {
+		//set cj_hor_val and cj_ver_val of rmin_method
 		y = 0;
 		for (i = 0; i <= max_hor; i++) {
 			if (mid_operator_val[i] == -1) { y++; }
@@ -367,29 +359,26 @@ int main() {
 	}
 
 	//extends rmarker_temp with 0 values
-	for (i = 0; i < max_ver; i++) {
-		rmarker[i] = 0;
-	}
-
 	for (i = max_ver; i < max_hor; i++) {
 		rmarker[i] = rmarker_temp[i - max_ver];
 	}
 
-	// add values of relational operators to mid
+	//add values of relational operators to mid
 	y = 0;
 	for (i = max_x; i < max_hor; i++) {
 		if (mid_operator_val[i - max_x] == -1) { y -= 1; }
 		mid[i - max_x + y][i] = mid_operator_val[i - max_x];
 	}
 
-	// start the loop
+	//start the loop
 	do {
+		//add less precision
 		for (i = 0; i <= max_hor; i++) {
 			mid[0][i] = round(mid[0][i] * 10000) / 10000.0;
 		}
 
 		if (integer_method == true) {
-			// remove unfit values
+			//remove unfit values
 			for (i = 0; i < max_hor; i++) {
 				if (mid[0][i] > mid[0][max_hor]) { cj_hor_val[0][i] = 0; mid[0][i] = 0; }
 			}
