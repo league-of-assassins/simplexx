@@ -71,10 +71,10 @@ void printer(double array[][25], int cj_ver_val[25], double cj_hor_val[1][25], s
 	}
 
 	if (printer_order == 0) { 
-		leftspace = 14; rightspace = 7; 
-		cout << "\n";
+		leftspace = 4; rightspace = 7; 
+		cout << "\n" << string(leftspace+3,spacee) << "Cj|";
 		for (i = 0; i < max_hor; i++) {
-			if (i == 1) { leftspace -= 13; }
+			if (i == 1) { leftspace -= 3; }
 			cout << string(leftspace, spacee) << cj_hor_name[i] << string(rightspace, spacee);
 		}
 		cout << "|\n " << string(12 + 10 * (max_hor + 1), linee); 
@@ -95,7 +95,7 @@ void bottom(double mid[10][25], string cj_hor_name[25], string cj_ver_name[25], 
 	cout << "\n       Zj|";
 	printer(zj, cj_ver_val, cj_hor_val, cj_ver_name[0], 0, max_hor, 2, max_ver, mid, maxi, key_hor, zway, cj_hor_name);
 	// output Cj-Zj
-	cout << "\n     C-Zj|";
+	cout << "\n    Cj-Zj|";
 	printer(cz, cj_ver_val, cj_hor_val, cj_ver_name[0], 0, max_hor - 1, 3, max_ver, zj, maxi, key_hor, zway, cj_hor_name);
 
 	//checks if loop should stop or continue with new sequence
@@ -369,6 +369,8 @@ int main() {
 		mid[i - max_x + y][i] = mid_operator_val[i - max_x];
 	}
 
+	cout << "\n\n";
+	
 	//start the loop
 	do {
 		//add less precision
