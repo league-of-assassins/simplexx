@@ -7,6 +7,16 @@
 
 using namespace std;
 
+void size_finder(double temp, int& leftspace) {
+	int size;
+
+	if (temp < 0) { leftspace--; temp = 0 - temp; }
+	if (temp >= 10) {
+		size = trunc(log10(temp)) + 1;
+		leftspace = leftspace - size + 1;
+	}
+}
+
 void printer(double array[][25], int cj_ver_val[25], double cj_hor_val[1][25], string cj_ver_name, int x, int max_hor,
 	int printer_order, int max_ver, double array2[][25], double& maxi, int& key_hor, bool zway, string cj_hor_name[25]) {
 	int i, p = 2, leftspace = 5, rightspace, j, size;
@@ -16,12 +26,9 @@ void printer(double array[][25], int cj_ver_val[25], double cj_hor_val[1][25], s
 	//printer_order: 0 top, 1 mid[x], 2 Zj, 3 Cj-Zj
 
 	if (printer_order == 1) {
-		temp = cj_ver_val[x];
-		if (temp < 0) { leftspace--; temp = 0 - temp; }
-		if (temp >= 10) {
-			size = trunc(log10(temp)) + 1;
-			leftspace = leftspace - size + 1;
-		}
+
+		size_finder(cj_ver_val[x], leftspace);
+
 		cout << "\n" << string(leftspace, spacee) << cj_ver_val[x] << " " << cj_ver_name << "|";
 	}
 
@@ -44,12 +51,8 @@ void printer(double array[][25], int cj_ver_val[25], double cj_hor_val[1][25], s
 
 		if (i == max_hor && printer_order != 0 && printer_order != 3) { cout << "   |"; }
 
-		temp = array[x][i];
-		if (temp < 0) { leftspace--; temp = 0 - temp; }
-		if (temp >= 10) {
-			size = trunc(log10(temp)) + 1;
-			leftspace = leftspace - size + 1;
-		}
+		size_finder(array[x][i], leftspace);
+
 		if (ceil(array[x][i]) == array[x][i]) {
 			p = 0; rightspace += 3;
 		}
