@@ -437,4 +437,8 @@ space formation supports up to -+99999.99
 integer type supports only 1st row
 input order is important. entering characters in an order other than shown in the example might break the program
 Correct way: zmax/zmin=equation | other equations | options
+
+	Visual Studio Warnings explained:
+Double to int data loss	| intentional
+buffer & invalid data		| Doesn't apply since max_x >= 0
 */
