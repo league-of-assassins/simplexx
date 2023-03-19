@@ -440,5 +440,5 @@ Correct way: zmax/zmin=equation | other equations | options
 
 	Visual Studio Warnings explained:
 Double to int data loss	| intentional
-buffer & invalid data		| Doesn't apply since max_x >= 0
+buffer & invalid data	| Doesn't apply since max_x >= 0
 */
