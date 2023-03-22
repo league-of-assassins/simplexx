@@ -10,6 +10,7 @@ using namespace std;
 void size_finder(double temp, int& leftspace) {
 	int size;
 
+	// determine space based on number size
 	if (temp < 0) { leftspace--; temp = 0 - temp; }
 	if (temp >= 10) {
 		size = trunc(log10(temp)) + 1;
@@ -81,10 +82,9 @@ void printer(double array[][25], int cj_ver_val[25], double cj_hor_val[1][25], s
 			if (i == 1) { leftspace -= 3; }
 			cout << string(leftspace, spacee) << cj_hor_name[i] << string(rightspace, spacee);
 		}
-		cout << "|\n " << string(12 + 10 * (max_hor + 1), linee);
 	}
 
-	if (printer_order == 1 && max_ver == x) { cout << "\n " << string(12 + 10 * (max_hor + 1), linee); }
+	if ((printer_order == 1 && max_ver == x) || printer_order == 0) { cout << "\n " << string(12 + 10 * (max_hor + 1), linee); }
 }
 
 void bottom(double mid[10][25], string cj_hor_name[25], string cj_ver_name[25], double cj_hor_val[1][25], int cj_ver_val[25],
@@ -104,23 +104,30 @@ void bottom(double mid[10][25], string cj_hor_name[25], string cj_ver_name[25], 
 
 	//checks if loop should stop or continue with new sequence
 	if (maxi == 0) {
+
 		//turn to integer
 		if (integer_method == true) {
+
 			integer_last_val_int = mid[0][max_hor];
 			if (mid[0][max_hor] == integer_last_val_int && integer_pass == false) { goto sc; }
-			mid[0][max_hor] = integer_last_val_int; integer_last_val_rest = mid_original[key_hor] * integer_last_val_int;
+
+			mid[0][max_hor] = integer_last_val_int;
 			if (integer_pass == false) { integer_pass = true; goto end; }
 
+			integer_last_val_rest = mid_original[key_hor] * integer_last_val_int;
 			if (integer_last_val_current_original != integer_last_val_rest) {
+
 				integer_answer[0][k] = key_hor;
 				integer_answer[1][k] = mid[0][max_hor];
 				cout << "\n\n 	" << cj_hor_name[key_hor] << ": " << integer_answer[1][k] << " New Sequence..\n";
 				k++;
 				integer_pass = false;
+
 				for (i = 0; i < max_hor; i++) {
 					while (mid[0][i] == 0) { i++; }
 					mid[0][i] = mid_original[i];
 				}
+
 				mid[0][max_hor] = integer_last_val_current_original - integer_last_val_rest;
 				integer_last_val_current_original = mid[0][max_hor];
 				cj_hor_val[0][key_hor] = 0;
@@ -129,6 +136,7 @@ void bottom(double mid[10][25], string cj_hor_name[25], string cj_ver_name[25], 
 				cj_ver_name[0] = cj_hor_name[max_hor - 1];
 			}goto end;
 		}
+
 	sc:score = true; if (rmin_method == true) { rmin_method = false; score = false; remover_enable = true; if (zway_original == true) { zway = true; } }
 		goto end;
 	}
@@ -211,13 +219,13 @@ int main() {
 	double mid[10][25] = {};		//midline array values
 	double mid_original[25] = {};		//original values of mid
 	double mid_operator_val[25] = {};	//temporary values of relational operators (< > =) to be added to main mid array later
-	int mid_last_val_marker[10] = {};	//last values coming after relational operators to be added to main mid array later
+	int mid_last_marker[10] = {};	//last values coming after relational operators to be added to main mid array later
 	double zj[1][25] = {};			//Zj line
 	double cz[1][25] = {};			//Cj-Zj line	
 	int rmarker[25] = {};			//mark R columns
 	int integer_answer[10][25] = {};	//for recording integer method answers
 
-	int i = 0, j = 0, y = 0, count_equation = 0, assign_x = 0, count_x = 0, max_hor = 0, count_cj = 0, mark_last = 0, max_ver = 0, key_hor = 0,
+	int i = 0, j = 0, y = 0, count_line = 0, current_x = 0, count_x = 0, max_hor = 0, count_cj = 0, mark_last = 0, max_ver = 0, key_hor = 0,
 		count_r = 0, count_s = 1, max_x = 0, a = 0, b = 0, k = 0, occupier = 0;
 	double occupier_2 = 0, integer_last_val_current_original = 0;
 	string temp_string;
@@ -236,19 +244,17 @@ int main() {
 
 		cin >> noskipws >> input[i];
 
-		if (input[i - b] == '-' && (input[i - a] == 't' || input[i - a] == 'T')) { integer_method = true; count_equation--; }
+		if (input[i - b] == '-' && (input[i - a] == 't' || input[i - a] == 'T')) { integer_method = true; count_line--; }
 
 		if ((input[i - a] == 'x' || input[i - a] == 'X') && isdigit(input[i])) {
 
 			// find numbers after x
 			temp_string = "";
 			temp_string = temp_string + input[i];
-			assign_x = stod(temp_string) - 1;
+			current_x = stod(temp_string) - 1;
 
 			// set array 0 if x skipped
-			while (count_x != assign_x) {
-				if (count_equation == 0 && first_equation == true) { cj_hor_val[0][count_x] = 0; }
-				else { mid[count_equation][count_x] = 0; }
+			while (count_x != current_x) {
 				count_x++;
 			}
 
@@ -260,17 +266,17 @@ int main() {
 			}
 
 			// create array with numbers before x
-			if (count_equation == 0 && first_equation == true) {
-				cj_hor_val[0][assign_x] = stod(temp_string);
-				if (input[i - j] == '-') { cj_hor_val[0][assign_x] = 0 - cj_hor_val[0][assign_x]; }
+			if (count_line == 0 && first_equation == true) {
+				cj_hor_val[0][current_x] = stod(temp_string);
+				if (input[i - j] == '-') { cj_hor_val[0][current_x] = 0 - cj_hor_val[0][current_x]; }
 			}
 			else {
-				mid[count_equation][assign_x] = stod(temp_string);
-				if (input[i - j] == '-') { mid[count_equation][assign_x] = 0 - mid[count_equation][assign_x]; }
+				mid[count_line][current_x] = stod(temp_string);
+				if (input[i - j] == '-') { mid[count_line][current_x] = 0 - mid[count_line][current_x]; }
 			}
 
 			//find max x
-			if (max_x < assign_x) { max_x = assign_x; }
+			if (max_x < current_x) { max_x = current_x; }
 			count_x++;
 		}
 
@@ -292,19 +298,19 @@ int main() {
 				count_r++; temp_string = to_string(count_r); cj_hor_name[count_cj] = "R" + temp_string; rmin_method = true; rmarker[count_cj] = 1;
 				break;
 			}
-			// mark mid_last_val
-			mid_last_val_marker[mark_last] = i; mark_last++; count_cj++;
+			// mark mid_last
+			mid_last_marker[mark_last] = i; mark_last++; count_cj++;
 		}
 
 		//space moves to next line
 		if (isspace(input[i - a]) && isdigit(input[i - b]) && (isdigit(input[i]) || input[i] == '-')) {
-			count_x = 0; count_equation++; if (count_equation == 1 && first_equation == true) { count_equation--; first_equation = false; }
+			count_x = 0; count_line++; if (count_line == 1 && first_equation == true) { count_line--; first_equation = false; }
 		}
 		if (i == 2) { a++; b += 2; }
 		i++;
 	}
 
-	max_ver = count_equation; max_x += 1; max_hor = max_x; max_hor += count_cj;
+	max_ver = count_line; max_x += 1; max_hor = max_x + count_cj;
 
 	// check if zmax or zmin
 	if (strstr(input, "a") || strstr(input, "A")) {
@@ -318,11 +324,11 @@ int main() {
 		return 0;
 	}
 
-	// find marked mid_last_val
+	// find marked mid_last
 	for (i = 0; i < mark_last; i++) {
 		temp_string = ""; y = 0;
-		while (isdigit(input[mid_last_val_marker[i] + y]) || input[mid_last_val_marker[i] + y] == '.') {
-			temp_string = temp_string + input[mid_last_val_marker[i] + y];
+		while (isdigit(input[mid_last_marker[i] + y]) || input[mid_last_marker[i] + y] == '.') {
+			temp_string = temp_string + input[mid_last_marker[i] + y];
 			y++;
 		}
 		mid[i][max_hor] = stod(temp_string);
@@ -434,7 +440,7 @@ int main() {
 /*
 	Notes:
 space formation supports up to -+99999.99
-integer type supports only 1st row
+integer type supports only 1 row
 input order is important. entering characters in an order other than shown in the example might break the program
 Correct way: zmax/zmin=equation | other equations | options
 
