@@ -6,6 +6,8 @@
 #include <Windows.h>
 
 using namespace std;
+
+
 class simplex{
 	public:
 		string cj_hor_name[25] = {};		//Horizontal line of Cj variables (S R -V)
@@ -109,13 +111,12 @@ class simplex{
 				i++;
 			}
 
+
 			max_x++;
 			max_hor = max_x + count_cj;
 			max_ver = count_line;
 
 			if (input.find("-t") != string::npos) { integer_method = true; max_ver--; }
-		
-
 		
 			// set cj_hor_name and extend rmarker
 			y = max_hor - max_x - 1;
@@ -179,10 +180,8 @@ class simplex{
 			}
 
 
+
 			cout << "\n\n";
-
-		
-
 		
 			do {
 				//add less precision
@@ -212,7 +211,6 @@ class simplex{
 			} while (score != true);
 		
 
-		
 
 			cout << "\n  Concluded..\n\n    ";
 
@@ -235,6 +233,8 @@ class simplex{
 			cin.ignore();
 		}
 
+
+
 		void size_finder(double temp, int& leftspace) {
 			int size;
 
@@ -245,6 +245,8 @@ class simplex{
 				leftspace = leftspace - size + 1;
 			}
 		}
+
+
 
 		void printer(double array[][25], int x, int printer_order) {
 			int i, p = 2, leftspace = 5, rightspace, j, size, a=0;
@@ -314,6 +316,8 @@ class simplex{
 
 			if ((printer_order == 1 && max_ver == x) || printer_order == 0) { cout << "\n " << string(12 + 10 * (max_hor + 1), linee); }
 		}
+
+
 
 		void bottom(){
 			int i, key_ver = 0, j, integer_last_val_int = 0;
@@ -398,6 +402,8 @@ class simplex{
 			cout << "\n\n\n";
 		}
 
+
+
 		void remover() {
 			int i = 0, j = 0, u = 0;
 			bool start = false;
@@ -434,12 +440,16 @@ class simplex{
 		}
 };
 
+
+
 int main(){
 
 	simplex obj;
 
 	return 0;
 }
+
+
 
 /*
 	Notes:
