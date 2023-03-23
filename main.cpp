@@ -339,7 +339,7 @@ public:
 
 			if (integer_method == true) {
 				turn_integer(sc);
-				if(sc==1){goto sc;}
+				if (sc == 1) { goto sc; }
 				goto end;
 			}
 
@@ -380,7 +380,7 @@ public:
 		cout << "\n\n\n";
 	}
 
-	void turn_integer(int& sc){
+	void turn_integer(int& sc) {
 		int last_int = 0;
 		double last_rest = 0;
 
@@ -411,7 +411,7 @@ public:
 			cj_ver_val[0] = 0;
 			cj_ver_name[0] = cj_hor_name[max_hor - 1];
 		}
-		end:;
+	end:;
 	}
 
 
@@ -421,10 +421,17 @@ public:
 		bool start = false;
 		remover_enable = false;
 
-		// copy old cj_hor_val to current
-		for (i = 0; i <= max_hor; i++) {
+		// restore original cj
+		for (i = 0; i < max_hor; i++) {
 			cj_hor_val[0][i] = cj_hor_val_x_original[i];
 		}
+
+		for (i = 0; i <= max_ver; i++) {
+			for (j = 0; j < max_hor; j++) {
+				if (cj_ver_name[i] == cj_hor_name[j]) { cj_ver_val[i] = cj_hor_val[0][j]; }
+			}
+		}
+
 
 		//remove R columns from array
 		for (i = 0; i <= max_hor; i++) {
@@ -442,12 +449,6 @@ public:
 			}
 		}
 
-		//copy cj_hor_val to cj_ver_val
-		for (i = 0; i <= max_ver + 1; i++) {
-			for (j = 0; j <= max_hor; j++) {
-				if (cj_ver_name[i] == cj_hor_name[j]) { cj_ver_val[i] = cj_hor_val[0][j]; }
-			}
-		}
 		max_hor -= count_r;
 	}
 };
