@@ -27,7 +27,7 @@ public:
 	int i = 2, j = 0, y = 0, count_line = 9, current_x = 0, count_x = 0, max_x = 0, max_hor = 0, max_ver = 0,
 		count_cj = 0, mark_last = 0, key_hor = 0, count_r = 0, count_s = 1, count_answer = 0, length;
 
-	double maxi = 0, integer_last_val_current_original = 0;
+	double maxi = 0, integer_last_current_original = 0;
 
 	string input, temp_string;
 
@@ -172,7 +172,7 @@ public:
 
 		if (integer_method == true) {
 
-			integer_last_val_current_original = mid[0][max_hor];
+			integer_last_current_original = mid[0][max_hor];
 
 			//store mid
 			for (i = 0; i < max_hor; i++) {
@@ -202,8 +202,10 @@ public:
 			for (i = 0; i <= max_ver; i++) {
 				printer(mid, i, 1);
 			}
+			printer(zj, 0, 2);
+			printer(cz, 0, 3);
 
-			bottom();
+			calculate();
 
 			if (remover_enable == true) {
 				remover();
@@ -260,6 +262,14 @@ public:
 			size_finder(cj_ver_val[x], leftspace);
 
 			cout << "\n" << string(leftspace, spacee) << cj_ver_val[x] << " " << cj_ver_name[x] << "|";
+		}
+
+		else if (printer_order == 2) {
+			cout << "\n       Zj|";
+		}
+
+		else if (printer_order == 3) {
+			cout << "\n    Cj-Zj|";
 		}
 
 		//output
@@ -319,50 +329,18 @@ public:
 
 
 
-	void bottom() {
-		int key_ver = 0, integer_last_val_int = 0;
-		double multiply, key = 0, temp = 0, tempo = 0, integer_last_val_rest = 0;
+	void calculate() {
+		int key_ver = 0, sc = 0;
+		double multiply, key = 0, temp = 0, tempo = 0;
 
-		// output Zj
-		cout << "\n       Zj|";
-		printer(zj, 0, 2);
-		// output Cj-Zj
-		cout << "\n    Cj-Zj|";
-		printer(cz, 0, 3);
 
 		//checks if loop should stop or restart
 		if (maxi == 0) {
 
-			//turn to integer
 			if (integer_method == true) {
-
-				integer_last_val_int = mid[0][max_hor];
-				if (mid[0][max_hor] == integer_last_val_int && integer_pass == false) { goto sc; }
-
-				mid[0][max_hor] = integer_last_val_int;
-				if (integer_pass == false) { integer_pass = true; goto end; }
-
-				integer_last_val_rest = mid_original[key_hor] * integer_last_val_int;
-				if (integer_last_val_current_original != integer_last_val_rest) {
-
-					integer_answer[0][count_answer] = key_hor;
-					integer_answer[1][count_answer] = mid[0][max_hor];
-					cout << "\n\n 	" << cj_hor_name[key_hor] << ": " << integer_answer[1][count_answer] << " New Sequence..\n";
-					count_answer++;
-					integer_pass = false;
-
-					for (i = 0; i < max_hor; i++) {
-						while (mid[0][i] == 0) { i++; }
-						mid[0][i] = mid_original[i];
-					}
-
-					mid[0][max_hor] = integer_last_val_current_original - integer_last_val_rest;
-					integer_last_val_current_original = mid[0][max_hor];
-					cj_hor_val[0][key_hor] = 0;
-					mid[0][key_hor] = 0;
-					cj_ver_val[0] = 0;
-					cj_ver_name[0] = cj_hor_name[max_hor - 1];
-				}goto end;
+				turn_integer(sc);
+				if(sc==1){goto sc;}
+				goto end;
 			}
 
 		sc:score = true; if (rmin_method == true) { rmin_method = false; score = false; remover_enable = true; if (zway_original == true) { zway = true; } }
@@ -400,6 +378,40 @@ public:
 
 	end:
 		cout << "\n\n\n";
+	}
+
+	void turn_integer(int& sc){
+		int last_int = 0;
+		double last_rest = 0;
+
+		last_int = mid[0][max_hor];
+		if (mid[0][max_hor] == last_int && integer_pass == false) { sc++; goto end; }
+
+		mid[0][max_hor] = last_int;
+		if (integer_pass == false) { integer_pass = true; goto end; }
+
+		last_rest = mid_original[key_hor] * last_int;
+		if (integer_last_current_original != last_rest) {
+
+			integer_answer[0][count_answer] = key_hor;
+			integer_answer[1][count_answer] = mid[0][max_hor];
+			cout << "\n\n 	" << cj_hor_name[key_hor] << ": " << integer_answer[1][count_answer] << " New Sequence..\n";
+			count_answer++;
+			integer_pass = false;
+
+			for (i = 0; i < max_hor; i++) {
+				while (mid[0][i] == 0) { i++; }
+				mid[0][i] = mid_original[i];
+			}
+
+			mid[0][max_hor] = integer_last_current_original - last_rest;
+			integer_last_current_original = mid[0][max_hor];
+			cj_hor_val[0][key_hor] = 0;
+			mid[0][key_hor] = 0;
+			cj_ver_val[0] = 0;
+			cj_ver_name[0] = cj_hor_name[max_hor - 1];
+		}
+		end:;
 	}
 
 
@@ -451,9 +463,7 @@ int main() {
 
 
 
-/*
-	Notes:
+/*	Notes:
 integer type supports only 1 row
 input order is important. entering characters in an order other than shown in the example might break the program
-Correct way: zmax/zmin=equation | other equations | options
-*/
+Correct way: zmax/zmin=equation | other equations | options	*/
