@@ -24,14 +24,15 @@ class simplex{
 		int rmarker[25] = {};			//mark R columns
 		int integer_answer[10][25] = {};	//for recording integer method answers
 
-		int i = 2, j = 0, y = 0, count_line = 9, current_x = 0, count_x = 0, max_hor = 0, count_cj = 0, mark_last = 0, max_ver = 0, key_hor = 0,
-		count_r = 0, count_s = 1, max_x = 0, a = 0, b = 0, k = 0, occupier = 0, length;
+		int i = 2, j = 0, y = 0, count_line = 9, current_x = 0, count_x = 0, max_x = 0, max_hor = 0,  max_ver = 0,
+		count_cj = 0, mark_last = 0, key_hor = 0, count_r = 0, count_s = 1, count_answer = 0, length;
 
 		double maxi = 0, integer_last_val_current_original = 0;
 
 		string input, temp_string;
 		
 		bool zway = false, rmin_method = false, zway_original = false, remover_enable = false, score = false, integer_method = false, integer_pass = false;
+
 
 
 		simplex(){
@@ -215,9 +216,9 @@ class simplex{
 			cout << "\n  Concluded..\n\n    ";
 
 			if (integer_method == true) {
-				integer_answer[0][k] = key_hor;
-				integer_answer[1][k] = mid[0][max_hor];
-				for (i = 0; i <= k; i++) {
+				integer_answer[0][count_answer] = key_hor;
+				integer_answer[1][count_answer] = mid[0][max_hor];
+				for (i = 0; i <= count_answer; i++) {
 					cout << "\n    " << cj_hor_name[integer_answer[0][i]] << ": " << integer_answer[1][i];
 				}
 			}
@@ -249,8 +250,7 @@ class simplex{
 
 
 		void printer(double array[][25], int x, int printer_order) {
-			int i, p = 2, leftspace = 5, rightspace, j, size, a=0;
-			double temp = 0;
+			int i, p = 2, leftspace = 5, rightspace, a=0;
 			char spacee = ' ', linee = '-';
 
 			//printer_order: 0 top, 1 mid[x], 2 Zj, 3 Cj-Zj
@@ -264,7 +264,7 @@ class simplex{
 
 			//output
 			for (i = 0; i <= max_hor - a; i++) {
-				leftspace = 5; rightspace = 1; p = 2, size = 0;
+				leftspace = 5; rightspace = 1; p = 2;
 
 				if (printer_order == 0) { if (i == 0) { leftspace += 10; } else if (i == max_hor) { break; } }
 
@@ -320,7 +320,7 @@ class simplex{
 
 
 		void bottom(){
-			int i, key_ver = 0, j, integer_last_val_int = 0;
+			int key_ver = 0, integer_last_val_int = 0;
 			double multiply, key = 0, temp = 0, tempo = 0, integer_last_val_rest = 0;
 
 			// output Zj
@@ -345,10 +345,10 @@ class simplex{
 					integer_last_val_rest = mid_original[key_hor] * integer_last_val_int;
 					if (integer_last_val_current_original != integer_last_val_rest) {
 
-						integer_answer[0][k] = key_hor;
-						integer_answer[1][k] = mid[0][max_hor];
-						cout << "\n\n 	" << cj_hor_name[key_hor] << ": " << integer_answer[1][k] << " New Sequence..\n";
-						k++;
+						integer_answer[0][count_answer] = key_hor;
+						integer_answer[1][count_answer] = mid[0][max_hor];
+						cout << "\n\n 	" << cj_hor_name[key_hor] << ": " << integer_answer[1][count_answer] << " New Sequence..\n";
+						count_answer++;
 						integer_pass = false;
 
 						for (i = 0; i < max_hor; i++) {
@@ -405,7 +405,7 @@ class simplex{
 
 
 		void remover() {
-			int i = 0, j = 0, u = 0;
+			int i = 0, u = 0;
 			bool start = false;
 			remover_enable = false;
 
