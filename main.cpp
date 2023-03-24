@@ -24,14 +24,14 @@ public:
 	int rmarker[25] = {};			//mark R columns
 	int integer_answer[10][25] = {};	//for recording integer method answers
 
-	int max_x = 0, max_hor = 0, max_ver = 0, key_hor = 0, count_r = 0, count_answer = 0;
+	int max_x = 0, max_hor = 1, max_ver = 0, key_hor = 0, count_r = 0, count_answer = 0;
 
 	double maxi = 0, integer_last_current_original = 0;
 
 	string temp_string;
 
-	bool zway = false, rmin_method = false, zway_original = false, remover_enable = false, score = false, integer_method = false, integer_pass = false, 
-	calc_pass = true;
+	bool zway = false, rmin_method = false, zway_original = false, remover_enable = false, score = false, integer_method = false, integer_pass = false,
+		calc_pass = true;
 
 
 
@@ -107,6 +107,9 @@ public:
 			}
 
 			if (isspace(input[i]) && isdigit(input[i - 1]) && (isdigit(input[i + 1]) || input[i + 1] == '-')) {
+
+				if (input[i + 2] == 't') { integer_method = true; count_line--; }
+
 				count_x = 0; count_line++;
 				if (count_line == 10) { count_line = 0; }
 			}
@@ -118,8 +121,6 @@ public:
 		max_x++;
 		max_hor = max_x + count_cj;
 		max_ver = count_line;
-
-		if (input.find("-t") != string::npos) { integer_method = true; max_ver--; }
 
 		// set cj_hor_name and extend rmarker
 		y = max_hor - max_x - 1;
@@ -182,6 +183,8 @@ public:
 			}
 		}
 
+		cout << "\n\n\n";
+
 		loop();
 	}
 
@@ -214,9 +217,9 @@ public:
 
 			loop_checker();
 
-			if(calc_pass == true) {
+			if (calc_pass == true) {
 				calculate();
-			} 
+			}
 			calc_pass = true;
 
 			if (remover_enable == true) {
@@ -371,15 +374,15 @@ public:
 				goto end;
 			}
 
-			sc:score = true; 
-			if (rmin_method == true) { 
-				rmin_method = false; score = false; remover_enable = true; if (zway_original == true) { zway = true; } 
+		sc:score = true;
+			if (rmin_method == true) {
+				rmin_method = false; score = false; remover_enable = true; if (zway_original == true) { zway = true; }
 			}
 			calc_pass = false;
 		}
 		maxi = 0;
 
-		end:;
+	end:;
 	}
 
 
@@ -413,7 +416,7 @@ public:
 			cj_hor_val[0][key_hor] = 0;
 			mid[0][key_hor] = 0;
 			cj_ver_val[0] = 0;
-			cj_ver_name[0] = cj_hor_name[max_hor - 1];
+			cj_ver_name[0] = cj_hor_name[max_x];
 		}
 	end:;
 	}
@@ -458,7 +461,7 @@ public:
 
 
 
-	void answer_print(){
+	void answer_print() {
 		int i;
 
 		cout << "\n  Concluded..\n\n    ";
