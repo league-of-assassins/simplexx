@@ -24,18 +24,20 @@ public:
 	int rmarker[25] = {};			//mark R columns
 	int integer_answer[10][25] = {};	//for recording integer method answers
 
-	int i = 2, j = 0, y = 0, count_line = 9, current_x = 0, count_x = 0, max_x = 0, max_hor = 0, max_ver = 0,
-		count_cj = 0, mark_last = 0, key_hor = 0, count_r = 0, count_s = 1, count_answer = 0, length;
+	int max_x = 0, max_hor = 0, max_ver = 0, key_hor = 0, count_r = 0, count_answer = 0;
 
 	double maxi = 0, integer_last_current_original = 0;
 
-	string input, temp_string;
+	string temp_string;
 
-	bool zway = false, rmin_method = false, zway_original = false, remover_enable = false, score = false, integer_method = false, integer_pass = false;
+	bool zway = false, rmin_method = false, zway_original = false, remover_enable = false, score = false, integer_method = false, integer_pass = false, 
+	calc_pass = true;
 
 
 
 	simplex() {
+		int i = 2, j = 0, y = 0, count_line = 9, current_x = 0, count_x = 0, count_cj = 0, count_s = 0, mark_last = 0, length;
+		string input;
 
 		cout << "\n Enter the equations. Examples: \n\n\t";
 		cout << " Zmin=6x1+1x2 6x1+2x2=5 8x1+6x2>12 2x1+4x2<8 \n\n\t Zmax=6x1+8x2 30x1+20x2<300 5x1+10x2<110 \n\n\t";
@@ -88,7 +90,7 @@ public:
 				mid_operator_val[count_cj] = 1;
 
 				if (input[i] == '<') {
-					temp_string = to_string(count_s); count_s++; cj_hor_name[count_cj] = "S" + temp_string;
+					count_s++; temp_string = to_string(count_s); cj_hor_name[count_cj] = "S" + temp_string;
 				}
 
 				else if (input[i] == '=' || input[i] == '>') {
@@ -180,9 +182,13 @@ public:
 			}
 		}
 
+		loop();
+	}
 
 
-		cout << "\n\n";
+
+	void loop() {
+		int i;
 
 		do {
 			//add less precision
@@ -202,38 +208,25 @@ public:
 			for (i = 0; i <= max_ver; i++) {
 				printer(mid, i, 1);
 			}
+
 			printer(zj, 0, 2);
 			printer(cz, 0, 3);
 
-			calculate();
+			loop_checker();
+
+			if(calc_pass == true) {
+				calculate();
+			} 
+			calc_pass = true;
 
 			if (remover_enable == true) {
 				remover();
 			}
+
 			cin.ignore();
 		} while (score != true);
 
-
-
-		cout << "\n  Concluded..\n\n    ";
-
-		if (integer_method == true) {
-			integer_answer[0][count_answer] = key_hor;
-			integer_answer[1][count_answer] = mid[0][max_hor];
-			for (i = 0; i <= count_answer; i++) {
-				cout << "\n    " << cj_hor_name[integer_answer[0][i]] << ": " << integer_answer[1][i];
-			}
-		}
-		else {
-			if (zway == true) { cout << "Zmax="; }
-			else { cout << "Zmin="; }
-			cout << zj[0][max_hor] << "\n";
-			for (i = 0; i <= max_ver; i++) {
-				cout << "    " << cj_ver_name[i] << "=" << mid[i][max_hor] << "\n";
-			}
-		} cout << "\n";
-
-		cin.ignore();
+		answer_print();
 	}
 
 
@@ -252,15 +245,13 @@ public:
 
 
 	void printer(double array[][25], int x, int printer_order) {
-		int i, p = 2, leftspace = 5, rightspace, a = 0;
+		int i, j, p = 2, leftspace = 5, rightspace, a = 0;
 		char spacee = ' ', linee = '-';
 
 		//printer_order: 0 top, 1 mid[x], 2 Zj, 3 Cj-Zj
 
 		if (printer_order == 1) {
-
 			size_finder(cj_ver_val[x], leftspace);
-
 			cout << "\n" << string(leftspace, spacee) << cj_ver_val[x] << " " << cj_ver_name[x] << "|";
 		}
 
@@ -325,28 +316,15 @@ public:
 		}
 
 		if ((printer_order == 1 && max_ver == x) || printer_order == 0) { cout << "\n " << string(12 + 10 * (max_hor + 1), linee); }
+
+		if (printer_order == 3) { cout << "\n\n\n"; }
 	}
 
 
 
 	void calculate() {
-		int key_ver = 0, sc = 0;
+		int i, j, key_ver = 0;
 		double multiply, key = 0, temp = 0, tempo = 0;
-
-
-		//checks if loop should stop or restart
-		if (maxi == 0) {
-
-			if (integer_method == true) {
-				turn_integer(sc);
-				if (sc == 1) { goto sc; }
-				goto end;
-			}
-
-		sc:score = true; if (rmin_method == true) { rmin_method = false; score = false; remover_enable = true; if (zway_original == true) { zway = true; } }
-			goto end;
-		}
-		maxi = 0;
 
 		// finds key_ver
 		for (i = 0; i <= max_ver; i++) {
@@ -376,16 +354,42 @@ public:
 		cj_ver_val[key_ver] = cj_hor_val[0][key_hor];
 		cj_ver_name[key_ver] = cj_hor_name[key_hor];
 
-	end:
-		cout << "\n\n\n";
 	}
 
-	void turn_integer(int& sc) {
-		int last_int = 0;
+
+
+	void loop_checker() {
+		bool sc = false;
+
+		//checks if loop should stop or restart
+		if (maxi == 0) {
+
+			if (integer_method == true) {
+				turn_integer(sc);
+				if (sc == true) { goto sc; }
+				calc_pass = false;
+				goto end;
+			}
+
+			sc:score = true; 
+			if (rmin_method == true) { 
+				rmin_method = false; score = false; remover_enable = true; if (zway_original == true) { zway = true; } 
+			}
+			calc_pass = false;
+		}
+		maxi = 0;
+
+		end:;
+	}
+
+
+
+	void turn_integer(bool& sc) {
+		int i, last_int = 0;
 		double last_rest = 0;
 
 		last_int = mid[0][max_hor];
-		if (mid[0][max_hor] == last_int && integer_pass == false) { sc++; goto end; }
+		if (mid[0][max_hor] == last_int && integer_pass == false) { sc = true; goto end; }
 
 		mid[0][max_hor] = last_int;
 		if (integer_pass == false) { integer_pass = true; goto end; }
@@ -417,7 +421,7 @@ public:
 
 
 	void remover() {
-		int i = 0, u = 0;
+		int i, j, u = 0;
 		bool start = false;
 		remover_enable = false;
 
@@ -451,6 +455,33 @@ public:
 
 		max_hor -= count_r;
 	}
+
+
+
+	void answer_print(){
+		int i;
+
+		cout << "\n  Concluded..\n\n    ";
+
+		if (integer_method == true) {
+			integer_answer[0][count_answer] = key_hor;
+			integer_answer[1][count_answer] = mid[0][max_hor];
+			for (i = 0; i <= count_answer; i++) {
+				cout << "\n    " << cj_hor_name[integer_answer[0][i]] << ": " << integer_answer[1][i];
+			}
+		}
+		else {
+			if (zway == true) { cout << "Zmax="; }
+			else { cout << "Zmin="; }
+			cout << zj[0][max_hor] << "\n";
+			for (i = 0; i <= max_ver; i++) {
+				cout << "    " << cj_ver_name[i] << "=" << mid[i][max_hor] << "\n";
+			}
+		} cout << "\n";
+
+		cin.ignore();
+	}
+
 };
 
 
