@@ -455,7 +455,6 @@ public:
 				u++;
 			}
 		}
-
 		max_hor -= count_r;
 	}
 
@@ -484,7 +483,6 @@ public:
 
 		cin.ignore();
 	}
-
 };
 
 
